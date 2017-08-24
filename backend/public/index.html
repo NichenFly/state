@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="//cdn.bootcss.com/angular.js/1.5.0/angular.min.js"></script>
+    <script>
+        angular.module('app', []);
+        angular.module('app').filter('safe',function($sce){
+            return function(htmltext){
+                return $sce.trustAsHtml(htmltext);
+            }
+        })
+        angular.module('app').controller('Ctrl', function ($scope) {
+            $scope.groups = [
+                {
+                    title: '演示环境',
+                    links: [{
+                        href: 'http://10.8.0.188',
+                        desc: '主系统',
+                        info: '<span style="color:red">数据库:</span>10.8.0.170:3306/wxb_cs_front, 用户名: gogs, 密码: Password1234@',
+                        outHref: 'http://221.0.111.132:9003',
+                        outDesc:'外网映射地址'
+                    }, {
+                        href: 'http://10.8.0.193:9000',
+                        desc: '附属系统',
+                        info: '<span style="color:red">数据库:</span>10.8.0.170:3306/wxb_cs_front_fushu, 用户名: gogs, 密码: Password1234@',
+                        outHref: 'http://221.0.111.140:9000',
+                        outDesc:'外网映射地址'
+                    }, {
+                        href: 'http://10.8.0.15:9008',
+                        desc: '爬虫区调度服务',
+                        info: '<span style="color:red">数据库:</span>10.8.0.170:3306/dispatch-spider, 用户名: gogs, 密码: Password1234@'
+                    }]
+                },{
+                    title: '测试环境1-功能',
+                    links: [{
+                        href: 'http://10.18.13.10:9007',
+                        desc: '主系统',
+                        info: '实际机器: 10.18.13.4  <span style="color:red">数据库:</span>10.18.13.10:3306/wxb_cs_front, 用户名: zh_user, 密码: Password1234@'
+                    }, {
+                        href: 'http://10.18.13.75:9007',
+                        desc: '附属系统',
+                        info: '实际机器: 10.18.13.68  <span style="color:red">数据库:</span>10.18.13.75:3306/wxb_cs_front, 用户名: zh_user, 密码: Password1234@'
+                    },{
+                        href: 'http://10.18.13.136:9008',
+                        desc: '爬虫区调度服务',
+                        info: '<span style="color:red">数据库:</span>10.18.13.166:3306/dispatch-spider, 用户名: root, 密码:Root1234@'
+                    }]
+                },{
+                    title: '测试环境2-性能',
+                    links: [{
+                        href: 'http://10.18.15.10:9007',
+                        desc: '主系统',
+                        info: '实际机器: 10.18.15.4  <span style="color:red">数据库:</span>10.18.15.10:3306/wxb_cs_front, 用户名: zh_user, 密码: Password1234@'
+                    }, {
+                        href: 'http://10.18.15.75:9007',
+                        desc: '附属系统',
+                        info: '实际机器: 10.18.15.68  <span style="color:red">数据库:</span>10.18.15.75:3306/wxb_cs_front, 用户名: zh_user, 密码: Password1234@'
+                    }, {
+                        href: 'http://10.18.15.146:9008',
+                        desc: '爬虫区调度服务',
+                        info: '<span style="color:red">数据库:</span>10.18.15.140:3306/dispatch-spider, 用户名: zh_user, 密码: Password1234@'
+                    }]
+                }, {
+                    title: '分所办公环境',
+                    links: [{
+                        href: 'http://testing.int-yt.com',
+                        desc: '禅道'
+                    },{
+                        href: 'http://10.0.2.10',
+                        desc: 'GitLab'
+                    },{
+                        href: 'http://10.8.0.1',
+                        desc: 'Docker服务器'
+                    },{
+                        href: 'http://10.1.1.54:9000',
+                        desc: '周报系统'
+                    }]
+                }, {
+                    title: '常用网址列表',
+                    links: [{
+                        href: 'https://chrome.google.com/webstore/detail/screenshot-service/fdmlndipfpiiomjbeamkfpncbnbjoffm',
+                        desc: '最新截图插件Chrome安装地址(需翻墙)'
+                    },{
+                        href: 'http://chrome-extension-downloader.com/a7b50e35cab13904a38ad595485c80db/fdmlndipfpiiomjbeamkfpncbnbjoffm.crx',
+                        desc: '最新截图插件下载地址(需翻墙)'
+                    },{
+                        href: 'http://www.bootcss.com/p/underscore/',
+                        desc: 'Underscore 中文文档',
+                        info: '核心工具库'
+                    },{
+                        href: 'http://10.8.0.128',
+                        desc: 'Angulr 模板',
+                        info: '内含Angulr模板最新版下载 文档 演示'
+                    }]
+                }
+            ];
+			
+    		$scope.ssh =  [{
+    		   title:"台账部署环境",
+    		   url:"10.0.2.10",
+    		   user:"root",
+    		   password:"wxbzh#zx" 
+    		}]
+        })
+    </script>
+    <style>
+        li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+
+        li span.link-desc {
+            color: black;
+        }
+
+        li span.link-info {
+            color: gray;
+            margin-left:20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+        .edit-agreement{
+            font-size:16px;
+            font-weight:bold;
+            line-height:20px;
+           
+            color:red;
+        }
+        body {
+            background: #fff;
+        }
+    </style>
+</head>
+<body ng-controller="Ctrl">
+<div ng-repeat="group in groups">
+    <h2>{{group.title}}</h2>
+    <ul>
+        <li ng-repeat="link in group.links">
+            <a ng-href="{{link.href}}" target="_blank">
+                <span class="link-desc">{{link.desc}} </span> - {{link.href}} 
+            </a>
+            <span class="link-info" ng-bind-html="link.info | safe"></span>
+            <span ng-if="link.outHref">
+                <span>{{link.outDesc}} : </span>
+                <a ng-href="{{link.outHref}}" target="_blank">
+                    {{link.outHref}} 
+                </a>
+                <!-- <span class="link-info" ng-bind-html="link.info | safe"></span> -->
+            </span>
+        </li>
+    </ul>
+	
+</div>
+<h2>常用服务器地址列表</h2>
+	<ul>
+	    <li ng-repeat="link in ssh">
+		   <span class="link-desc">{{link.title}}</span>
+		   <span class="link-desc">{{link.url}} , 用户名 : {{link.user}}, 密码： {{link.password}}</span>
+           
+        </li>
+	</ul>
+<div class="edit-agreement">
+    <hr>
+    每人都可以修改本网页.本网页待服地址: http://10.8.0.157 |
+    修改方法: ssh root@10.8.0.157 密码:password!@ |
+    文件路径: /var/www/html/index.html
+
+</div>
+</body>
+</html>
