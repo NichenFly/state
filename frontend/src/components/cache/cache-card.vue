@@ -1,0 +1,109 @@
+<template>
+    <div>
+        <Row class="rows">
+            <Col span="12" class="card">
+                <Card>
+                    <p slot="title">10.18.13.7</p>
+                    <div>
+                        <!-- <p>mysql  Ver 14.14 Distrib 5.7.16, for Linux (x86_64) using  EditLine wrapper</p> -->
+                        <Table size="small" :columns="columns" :data="data" :show-header="false"></Table>
+                    </div>
+                </Card>
+            </Col>
+            <Col span="12" class="card">
+                <Card>
+                    <p slot="title">10.18.13.7</p>
+                    <div>
+                        <!-- <p>mysql  Ver 14.14 Distrib 5.7.16, for Linux (x86_64) using  EditLine wrapper</p> -->
+                        <Table size="small" :columns="columns" :data="data" :show-header="false"></Table>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
+    </div>
+</template>
+<script>
+    import ExpandRow from './cache-expand-row.vue'
+    export default {
+        data () {
+            return {
+                columns: [
+                    {
+                        type: 'expand',
+                        width: 50,
+                        render: (h, params) => {
+                            return h(ExpandRow, {
+                                props: {
+                                    row: params.row
+                                }
+                            })
+                        }
+                    },
+                    {
+                        title: '变量名',
+                        key: 'variable'
+                    },
+                    {
+                        title: '变量值',
+                        key: 'value'
+                    }
+                ],
+                data: [
+                    {
+                        variable: 'Qcache_free_blocks',
+                        value: '5216',
+                        desc: '缓存中相邻内存块的个数。数目大说明可能有碎片。FLUSH QUERY CACHE 会对缓存中的碎片进行整理，从而得到一个空闲块'
+                    },
+                    {
+                        variable: 'Qcache_free_memory',
+                        value: '5216',
+                        desc: '缓存中的空闲内存'
+                    },
+                    {
+                        variable: 'Qcache_hits',
+                        value: '5216',
+                        desc: '每次查询在缓存中命中时就增大'
+                    },
+                    {
+                        variable: 'Qcache_inserts',
+                        value: '5216',
+                        desc: '每次插入一个查询时就增大。命中次数除以插入次数就是不中比率；用 1 减去这个值就是命中率。在上面这个例子中，大约有 87% 的查询都在缓存中命中'
+                    },
+                    {
+                        variable: 'Qcache_lowmem_prunes',
+                        value: '5216',
+                        desc: '缓存出现内存不足并且必须要进行清理以便为更多查询提供空间的次数。这个数字最好长时间来看；如果这个数字在不断增长，就表示可能碎片非常严重，或者内存很少。（上面的 free_blocks 和 free_memory 可以告诉您属于哪种情况）'
+                    },
+                    {
+                        variable: 'Qcache_not_cached',
+                        value: '5216',
+                        desc: '不适合进行缓存的查询的数量，通常是由于这些查询不是 SELECT 语句'
+                    },
+                    {
+                        variable: 'Qcache_queries_in_cache',
+                        value: '5216',
+                        desc: '当前缓存的查询（和响应）的数量'
+                    },
+                    {
+                        variable: 'Qcache_total_blocks',
+                        value: '5216',
+                        desc: '缓存中块的数量'
+                    }
+                ]
+            }
+        },
+        components: {
+            ExpandRow
+        }
+    }
+</script>
+<style lang="scss" scoped>
+    .rows {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ivu-card {
+        margin: 10px;
+    }
+</style>
+

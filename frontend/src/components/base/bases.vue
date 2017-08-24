@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-    import BaseCard from '@/components/base-card'
+    import BaseCard from '@/components/base/base-card'
     export default {
         components: {
             BaseCard

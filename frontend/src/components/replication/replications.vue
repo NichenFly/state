@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-    import expandRow from './expand-row.vue'
+    import ExpandRow from './replication-expand-row.vue'
 
     export default {
         data () {
@@ -14,7 +14,7 @@
                         type: 'expand',
                         width: 50,
                         render: (h, params) => {
-                            return h(expandRow, {
+                            return h(ExpandRow, {
                                 props: {
                                     row: params.row
                                 }
@@ -118,7 +118,7 @@
         computed: {
         },
         components: {
-            expandRow
+            ExpandRow
         }
     }
 </script>

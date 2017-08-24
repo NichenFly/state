@@ -11,7 +11,12 @@
                             <Icon type="ios-navigate"></Icon>
                             MySQL类别
                         </template>
-                        <Menu-item :name="menu.path" v-for="menu in menus" :key="menu.name">{{ menu.name }}</Menu-item>
+                        
+                            <Menu-item :name="menu.path" v-for="menu in menus" :key="menu.name">
+                                <Badge :count="menu.badge">
+                                    <span class="badge">{{ menu.name }}</span>
+                                </Badge>
+                            </Menu-item>
                     </Submenu>
                 </Menu>
             </i-col>
@@ -21,7 +26,9 @@
                 </div>
                 <div class="layout-content">
                     <div class="layout-content-main">
-                        <router-view></router-view>
+                        <keep-alive>
+                            <router-view></router-view>
+                        </keep-alive>
                     </div>
                 </div>
                 <div class="layout-copy">
@@ -39,17 +46,20 @@
                     {
                         name: '基本状态',
                         path: '/bases',
-                        desc: '显示数据库的基本状态'
+                        desc: '显示数据库的基本状态',
+                        badge: 0
                     },
                     {
                         name: '缓存状态',
                         path: '/caches',
-                        desc: '显示数据库的缓存信息'
+                        desc: '显示数据库的缓存信息',
+                        badge: 0
                     },
                     {
                         name: '复制状态',
                         path: '/replications',
-                        desc: '显示数据库的主从复制状态'
+                        desc: '显示数据库的主从复制状态',
+                        badge: 3
                     }
                 ]
             }
@@ -129,5 +139,11 @@
         background-color: #2db7f5;
         color: #fff;
         font-size: 16px;
+    }
+
+    .badge{
+        border-radius: 6px;
+        display: inline-block;
+        width: 90px;
     }
 </style>
