@@ -1,6 +1,7 @@
 <template>
     <div>
         <base-card :baseList="baseData"></base-card>
+        <Spin size="large" fix v-if="baseData.length === 0"></Spin>
     </div>
 </template>
 <script>

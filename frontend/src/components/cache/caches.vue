@@ -1,6 +1,7 @@
 <template>
     <div>
         <cache-card :cacheList="cacheData"></cache-card>
+        <Spin size="large" fix v-if="cacheData.length === 0"></Spin>
     </div>
 </template>
 <script>
@@ -11,11 +12,6 @@
     import { intervalTime } from 'constants/constants'
 
     export default {
-        // computed: {
-        //     ...mapGetters([
-        //         'cacheData'
-        //     ])
-        // },
         data() {
             return {
                 cacheData: []

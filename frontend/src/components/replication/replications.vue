@@ -1,6 +1,7 @@
 <template>
     <div>
         <Table :row-class-name="rowClassName" :columns="tableColumns" :data="tableData" v-if="tableColumns.length"></Table>
+        <Spin size="large" fix v-if="tableColumns.length === 0"></Spin>
     </div>
 </template>
 <script>
