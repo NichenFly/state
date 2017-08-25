@@ -1,11 +1,31 @@
 <template>
     <div>
-        <base-card></base-card>
+        <base-card :baseList="baseData"></base-card>
     </div>
 </template>
 <script>
     import BaseCard from '@/components/base/base-card'
+    import { mapGetters } from 'vuex'
+    import { intervalTime } from 'constants/constants'
+
     export default {
+        computed: {
+            ...mapGetters([
+                'baseData'
+            ])
+        },
+        activated() {
+            this.interval = window.setInterval(() => {
+                // 获取数据的逻辑
+                console.log('123')
+            }, intervalTime)
+        },
+        deactivated() {
+            if (this.interval) {
+                console.log('456')
+                window.clearInterval(this.interval)
+            }
+        },
         components: {
             BaseCard
         }

@@ -1,0 +1,7 @@
+export const SET_TITLE = 'SET_TITLE'
+
+export const SET_BASE_DATA = 'SET_BASE_DATA'
+
+export const SET_CACHE_DATA = 'SET_CACHE_DATA'
+
+export const SET_REPLICATION_DATA = 'SET_REPLICATION_DATA'
