@@ -39,31 +39,9 @@
     </div>
 </template>
 <script>
+    import { mapGetters } from 'vuex'
+
     export default {
-        data() {
-            return {
-                menus: [
-                    {
-                        name: '基本状态',
-                        path: '/bases',
-                        desc: '显示数据库的基本状态',
-                        badge: 0
-                    },
-                    {
-                        name: '缓存状态',
-                        path: '/caches',
-                        desc: '显示数据库的缓存信息',
-                        badge: 0
-                    },
-                    {
-                        name: '复制状态',
-                        path: '/replications',
-                        desc: '显示数据库的主从复制状态',
-                        badge: 3
-                    }
-                ]
-            }
-        },
         methods: {
             menuSelected(menuRoute) {
                 this.$router.push({
@@ -72,9 +50,32 @@
             }
         },
         computed: {
-            title() {
-                return '主从状态'
-            }
+            menus() {
+                return [
+                    {
+                        name: '基本状态',
+                        path: '/bases',
+                        desc: '显示数据库的基本状态',
+                        badge: this.warns['base']
+                    },
+                    {
+                        name: '缓存状态',
+                        path: '/caches',
+                        desc: '显示数据库的缓存信息',
+                        badge: this.warns['cache']
+                    },
+                    {
+                        name: '复制状态',
+                        path: '/replications',
+                        desc: '显示数据库的主从复制状态',
+                        badge: this.warns['replication']
+                    }
+                ]
+            },
+            ...mapGetters([
+                'title',
+                'warns'
+            ])
         },
         created() {
             let currentRoute = this.$router.currentRoute.path

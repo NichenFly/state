@@ -6,7 +6,7 @@
                     <p slot="title"> {{cache.title}} </p>
                     <div>
                         <!-- <p>mysql  Ver 14.14 Distrib 5.7.16, for Linux (x86_64) using  EditLine wrapper</p> -->
-                        <Table size="small" :columns="cahche.column" :data="cache.data" :show-header="false"></Table>
+                        <Table size="small" :columns="cache.columns" :data="cache.data" :show-header="false"></Table>
                     </div>
                 </Card>
             </Col>
@@ -16,6 +16,7 @@
 <script>
     import ExpandRow from './cache-expand-row'
     import {resolveListTo2} from 'common/js/utils'
+    import { expandWidth } from 'constants/constants'
 
     export default {
         props: {
@@ -28,8 +29,8 @@
             cacheData() {
                 // 展开的选项设置
                 let expand = {
-                    type: expand,
-                    width: 50,
+                    type: 'expand',
+                    width: expandWidth,
                     render: (h, params) => {
                         return h(ExpandRow, {
                             props: {
@@ -39,7 +40,7 @@
                     }
                 }
                 // 加入展开的选项设置
-                this.cacheList.forEach(cache => cache.column.unshift(expand))
+                this.cacheList.forEach(cache => cache.columns.unshift(expand))
 
                 return resolveListTo2(this.cacheList)
             }

@@ -1,106 +1,33 @@
 <template>
     <div>
-        <Table :row-class-name="rowClassName" :columns="columns" :data="data" :no-data-text="noDataText"></Table>
+        <Table :row-class-name="rowClassName" :columns="tableColumns" :data="tableData" v-if="tableColumns.length"></Table>
     </div>
 </template>
 <script>
-    import ExpandRow from './replication-expand-row.vue'
+    import ExpandRow from './replication-expand-row'
+    import { intervalTime, expandWidth, relayWarn } from 'constants/constants'
+    import { getReplications } from 'api/replication'
+    import { mapMutations } from 'vuex'
+    import * as types from 'store/mutation-types'
 
     export default {
-        data () {
+        data() {
             return {
-                columns: [
-                    {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                            return h(ExpandRow, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
-                    },
-                    {
-                        title: '主机',
-                        key: 'host'
-                    },
-                    {
-                        title: '主/从',
-                        key: 'masterSlave'
-                    },
-                    {
-                        title: '状态',
-                        key: 'state'
-                    },
-                    {
-                        title: '时延(ms)',
-                        key: 'relay'
-                    }
-                ],
-                data: [
-                    {
-                        host: '10.18.13.7',
-                        masterSlave: 'slave',
-                        state: '正常',
-                        relay: 3,
-                        hasError: false,
-                        Last_SQL_Running: 'Yes',
-                        Last_IO_Running: 'Yes',
-                        Last_IO_State: '...',
-                        Last_SQL_State: 'Waiting for more events ...'
-                    },
-                    {
-                        host: '10.18.13.8',
-                        masterSlave: 'master',
-                        state: '正常'
-                    },
-                    {
-                        host: '10.18.13.34',
-                        masterSlave: 'master/slave',
-                        state: '正常',
-                        relay: 100,
-                        hasError: false,
-                        Last_SQL_Running: 'Yes',
-                        Last_IO_Running: 'Yes',
-                        Last_IO_State: '...',
-                        Last_SQL_State: 'Waiting for more events ...'
-                    },
-                    {
-                        host: '10.18.13.35',
-                        masterSlave: 'master/slave',
-                        state: '出错',
-                        relay: 0,
-                        hasError: true,
-                        Last_SQL_Running: 'No',
-                        Last_IO_Running: 'Yes',
-                        Last_IO_State: '...',
-                        Last_SQL_State: 'Waiting for more events ...'
-                    },
-                    {
-                        host: '10.18.13.70',
-                        masterSlave: 'slave',
-                        state: '正常',
-                        relay: 10000,
-                        hasError: false,
-                        Last_SQL_Running: 'Yes',
-                        Last_IO_Running: 'Yes',
-                        Last_IO_State: '...',
-                        Last_SQL_State: 'Waiting for more events ...'
-                    },
-                    {
-                        host: '10.18.13.71',
-                        masterSlave: 'slave',
-                        state: '出错',
-                        relay: 0,
-                        hasError: true,
-                        Last_SQL_Running: 'No',
-                        Last_IO_Running: 'Yes',
-                        Last_IO_State: '...',
-                        Last_SQL_State: 'Error'
-                    }
-                ],
-                noDataText: '暂无配置数据'
+                tableColumns: [],
+                tableData: []
+            }
+        },
+        activated() {
+            this.setTitle('展示数据库的主从复制信息')
+            this._getData()
+            this.interval = window.setInterval(() => {
+                // 获取数据的逻辑
+                this._getData()
+            }, intervalTime)
+        },
+        deactivated() {
+            if (this.interval) {
+                window.clearInterval(this.interval)
             }
         },
         methods: {
@@ -109,13 +36,53 @@
                     return 'table-error-row'
                 }
 
-                if (row.relay > 1000) {
+                if (row.relay > relayWarn) {
                     return 'table-warn-row'
                 }
                 return ''
-            }
-        },
-        computed: {
+            },
+            _getData() {
+                getReplications().then((res) => {
+                    if (res.code === 200) {
+                        // 展开的选项设置
+                        let expand = {
+                            type: 'expand',
+                            width: expandWidth,
+                            render: (h, params) => {
+                                return h(ExpandRow, {
+                                    props: {
+                                        row: params.row
+                                    }
+                                })
+                            }
+                        }
+                        // 加入展开的选项设置
+                        let data = res.data
+                        data.columns.unshift(expand)
+
+                        // 设置警告信息到vuex
+                        this.setWarnsReplication(this._getWarns(data.data))
+
+                        this.tableColumns = data.columns
+                        this.tableData = data.data
+                    }
+                })
+            },
+            _getWarns(data) {
+                let num = 0
+                data.forEach((item) => {
+                    if (item.hasError) {
+                        num++
+                    } else if (item.relay > relayWarn) {
+                        num++
+                    }
+                })
+                return num
+            },
+            ...mapMutations({
+                setTitle: types.SET_TITLE,
+                setWarnsReplication: types.SET_WARNS_REPLICATION
+            })
         },
         components: {
             ExpandRow

@@ -1,0 +1,86 @@
+{
+    "code": 200,
+    "msg": "成功",
+    "data": {
+        "columns": [
+            {
+                "title": "主机",
+                "key": "host"
+            },
+            {
+                "title": "主/从",
+                "key": "master/Slave"
+            },
+            {
+                "title": "状态",
+                "key": "state"
+            },
+            {
+                "title": "时延(ms)",
+                "key": "relay"
+            }
+        ],
+        "data": [
+            {
+                "host": "10.18.13.7",
+                "masterSlave": "slave",
+                "state": "正常",
+                "relay": 3,
+                "hasError": false,
+                "Last_SQL_Running": "Yes",
+                "Last_IO_Running": "Yes",
+                "Last_IO_State": "...",
+                "Last_SQL_State": "Waiting for more events ..."
+            },
+            {
+                "host": "10.18.13.8",
+                "masterSlave": "master",
+                "state": "正常"
+            },
+            {
+                "host": "10.18.13.34",
+                "masterSlave": "master/slave",
+                "state": "正常",
+                "relay": 11,
+                "hasError": false,
+                "Last_SQL_Running": "Yes",
+                "Last_IO_Running": "Yes",
+                "Last_IO_State": "...",
+                "Last_SQL_State": "Waiting for more events ..."
+            },
+            {
+                "host": "10.18.13.35",
+                "masterSlave": "master/slave",
+                "state": "出错",
+                "relay": 0,
+                "hasError": true,
+                "Last_SQL_Running": "No",
+                "Last_IO_Running": "Yes",
+                "Last_IO_State": "...",
+                "Last_SQL_State": "Waiting for more events ..."
+            },
+            {
+                "host": "10.18.13.70",
+                "masterSlave": "slave",
+                "state": "正常",
+                "relay": 10000,
+                "hasError": false,
+                "Last_SQL_Running": "Yes",
+                "Last_IO_Running": "Yes",
+                "Last_IO_State": "...",
+                "Last_SQL_State": "Waiting for more events ..."
+            },
+            {
+                "host": "10.18.13.71",
+                "masterSlave": "slave",
+                "state": "出错",
+                "relay": 0,
+                "hasError": true,
+                "Last_SQL_Running": "No",
+                "Last_IO_Running": "Yes",
+                "Last_IO_State": "...",
+                "Last_SQL_State": "Error"
+            }
+        ]
+    }
+}

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Row class="rows" v-for="(bases,index) in baseData" :key="index">
-            <Col span="12" class="card" v-for="{base, baseIndex} in bases" :key="baseIndex">
+        <Row class="rows" v-for="(bases, index) in baseData" :key="index">
+            <Col span="12" class="card" v-for="(base, baseIndex) in bases" :key="baseIndex">
                 <Card>
-                    <p slot="title">{{ base }}</p>
+                    <p slot="title">{{ base.title }}</p>
                     <div>
                         <!-- <p>mysql  Ver 14.14 Distrib 5.7.16, for Linux (x86_64) using  EditLine wrapper</p> -->
                         <Table size="small" :columns="base.columns" :data="base.data" :show-header="false"></Table>
@@ -25,7 +25,8 @@
         },
         computed: {
             baseData() {
-                return resolveListTo2(this.baseList)
+                let bases = resolveListTo2(this.baseList)
+                return bases
             }
         }
     }

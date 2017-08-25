@@ -1,11 +1,51 @@
 <template>
     <div>
-        <cache-card></cache-card>
+        <cache-card :cacheList="cacheData"></cache-card>
     </div>
 </template>
 <script>
     import CacheCard from '@/components/cache/cache-card'
+    import { mapMutations } from 'vuex'
+    import * as types from 'store/mutation-types'
+    import { getCaches } from 'api/cache'
+    import { intervalTime } from 'constants/constants'
+
     export default {
+        // computed: {
+        //     ...mapGetters([
+        //         'cacheData'
+        //     ])
+        // },
+        data() {
+            return {
+                cacheData: []
+            }
+        },
+        activated() {
+            this.setTitle('展示数据库缓存信息')
+            this._getData()
+            this.interval = window.setInterval(() => {
+                // 获取数据的逻辑
+                this._getData()
+            }, intervalTime)
+        },
+        deactivated() {
+            if (this.interval) {
+                window.clearInterval(this.interval)
+            }
+        },
+        methods: {
+            _getData() {
+                getCaches().then((res) => {
+                    if (res.code === 200) {
+                        this.cacheData = res.data
+                    }
+                })
+            },
+            ...mapMutations({
+                setTitle: types.SET_TITLE
+            })
+        },
         components: {
             CacheCard
         }

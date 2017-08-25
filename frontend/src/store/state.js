@@ -1,6 +1,8 @@
 export default {
     title: '',
-    baseData: [],
-    cacheData: [],
-    replicationData: []
+    warns: {
+        base: 0,
+        cache: 0,
+        replication: 0
+    }
 }

@@ -8,5 +8,5 @@ export function getBases() {
             time: new Date().getTime()
         }
     })
-    .then((res) => Promise.resolve(res))
+    .then((res) => Promise.resolve(res.data))
 }

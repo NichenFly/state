@@ -4,14 +4,14 @@ const mutations = {
     [types.SET_TITLE](state, title) {
         state.title = title
     },
-    [types.SET_BASE_DATA](state, data) {
-        this.baseData = data
+    [types.SET_WARNS_BASE](state, number) {
+        state.warns.base = number
     },
-    [types.SET_CACHE_DATA](state, data) {
-        this.cacheData = data
+    [types.SET_WARNS_CACHE](state, number) {
+        state.warns.cache = number
     },
-    [types.SET_REPLICATION_DATA](state, data) {
-        this.replicationData = data
+    [types.SET_WARNS_REPLICATION](state, number) {
+        state.warns.replication = number
     }
 }
 

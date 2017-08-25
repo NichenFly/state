@@ -5,26 +5,41 @@
 </template>
 <script>
     import BaseCard from '@/components/base/base-card'
-    import { mapGetters } from 'vuex'
+    import { mapMutations } from 'vuex'
+    import * as types from 'store/mutation-types'
     import { intervalTime } from 'constants/constants'
+    import { getBases } from 'api/base'
 
     export default {
-        computed: {
-            ...mapGetters([
-                'baseData'
-            ])
+        data() {
+            return {
+                baseData: []
+            }
         },
         activated() {
+            this.setTitle('展示数据库的基本信息')
+            this._getData()
             this.interval = window.setInterval(() => {
                 // 获取数据的逻辑
-                console.log('123')
+                this._getData()
             }, intervalTime)
         },
         deactivated() {
             if (this.interval) {
-                console.log('456')
                 window.clearInterval(this.interval)
             }
+        },
+        methods: {
+            _getData() {
+                getBases().then((res) => {
+                    if (res.code === 200) {
+                        this.baseData = res.data
+                    }
+                })
+            },
+            ...mapMutations({
+                setTitle: types.SET_TITLE
+            })
         },
         components: {
             BaseCard
@@ -33,15 +48,12 @@
 </script>
 <style lang="scss" scoped>
     .rows {
-        // flex-direction: column;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
-        // align-content: flex-start;
     }
     .ivu-card {
         margin: 10px;
-        // display: flex;
         height: 300px;
     }
 </style>
