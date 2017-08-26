@@ -9,7 +9,7 @@
             },
             {
                 "title": "主/从",
-                "key": "master/Slave"
+                "key": "masterSlave"
             },
             {
                 "title": "状态",
