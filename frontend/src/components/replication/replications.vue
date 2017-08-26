@@ -8,7 +8,7 @@
     import ExpandRow from './replication-expand-row'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { relayWarn } from 'constants/constants'
+    import { relayWarn, infoTitleReplication } from 'constants/constants'
 
     export default {
         computed: {
@@ -16,8 +16,8 @@
                 'replicationData'
             ])
         },
-        mounted() {
-            this.setTitle('展示数据库的主从复制信息')
+        activated() {
+            this.setTitle(infoTitleReplication)
         },
         methods: {
             rowClassName (row, index) {

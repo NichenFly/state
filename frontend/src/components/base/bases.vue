@@ -8,6 +8,7 @@
     import BaseCard from '@/components/base/base-card'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
+    import { infoTitleBase } from 'constants/constants'
 
     export default {
         computed: {
@@ -16,7 +17,7 @@
             ])
         },
         activated() {
-            this.setTitle('展示数据库的基本信息')
+            this.setTitle(infoTitleBase)
         },
         methods: {
             ...mapMutations({

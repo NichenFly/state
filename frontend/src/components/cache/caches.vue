@@ -8,6 +8,7 @@
     import CacheCard from '@/components/cache/cache-card'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
+    import { infoTitleCache } from 'constants/constants'
 
     export default {
         computed: {
@@ -15,8 +16,8 @@
                 'cacheData'
             ])
         },
-        mounted() {
-            this.setTitle('展示数据库缓存信息')
+        activated() {
+            this.setTitle(infoTitleCache)
         },
         methods: {
             ...mapMutations({
