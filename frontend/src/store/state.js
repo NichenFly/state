@@ -4,5 +4,8 @@ export default {
         base: 0,
         cache: 0,
         replication: 0
-    }
+    },
+    baseData: [],
+    cacheData: [],
+    replicationData: []
 }

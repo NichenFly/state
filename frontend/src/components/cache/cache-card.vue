@@ -15,8 +15,6 @@
 </template>
 <script>
     import ExpandRow from './cache-expand-row'
-    import {resolveListTo2} from 'common/js/utils'
-    import { expandWidth } from 'constants/constants'
 
     export default {
         props: {
@@ -27,22 +25,7 @@
         },
         computed: {
             cacheData() {
-                // 展开的选项设置
-                let expand = {
-                    type: 'expand',
-                    width: expandWidth,
-                    render: (h, params) => {
-                        return h(ExpandRow, {
-                            props: {
-                                row: params.row
-                            }
-                        })
-                    }
-                }
-                // 加入展开的选项设置
-                this.cacheList.forEach(cache => cache.columns.unshift(expand))
-
-                return resolveListTo2(this.cacheList)
+                return this.cacheList
             }
         },
         components: {

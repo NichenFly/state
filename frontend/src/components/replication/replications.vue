@@ -1,35 +1,23 @@
 <template>
     <div>
-        <Table :row-class-name="rowClassName" :columns="tableColumns" :data="tableData" v-if="tableColumns.length"></Table>
-        <Spin size="large" fix v-if="tableColumns.length === 0"></Spin>
+        <Table :row-class-name="rowClassName" :columns="replicationData.columns" :data="replicationData.data" v-if="replicationData.columns && replicationData.columns.length"></Table>
+        <Spin size="large" fix v-if="!replicationData.columns || replicationData.columns.length === 0"></Spin>
     </div>
 </template>
 <script>
     import ExpandRow from './replication-expand-row'
-    import { intervalTime, expandWidth, relayWarn } from 'constants/constants'
-    import { getReplications } from 'api/replication'
-    import { mapMutations } from 'vuex'
+    import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
+    import { relayWarn } from 'constants/constants'
 
     export default {
-        data() {
-            return {
-                tableColumns: [],
-                tableData: []
-            }
+        computed: {
+            ...mapGetters([
+                'replicationData'
+            ])
         },
-        activated() {
+        mounted() {
             this.setTitle('展示数据库的主从复制信息')
-            this._getData()
-            this.interval = window.setInterval(() => {
-                // 获取数据的逻辑
-                this._getData()
-            }, intervalTime)
-        },
-        deactivated() {
-            if (this.interval) {
-                window.clearInterval(this.interval)
-            }
         },
         methods: {
             rowClassName (row, index) {
@@ -42,47 +30,8 @@
                 }
                 return ''
             },
-            _getData() {
-                getReplications().then((res) => {
-                    if (res.code === 200) {
-                        // 展开的选项设置
-                        let expand = {
-                            type: 'expand',
-                            width: expandWidth,
-                            render: (h, params) => {
-                                return h(ExpandRow, {
-                                    props: {
-                                        row: params.row
-                                    }
-                                })
-                            }
-                        }
-                        // 加入展开的选项设置
-                        let data = res.data
-                        data.columns.unshift(expand)
-
-                        // 设置警告信息到vuex
-                        this.setWarnsReplication(this._getWarns(data.data))
-
-                        this.tableColumns = data.columns
-                        this.tableData = data.data
-                    }
-                })
-            },
-            _getWarns(data) {
-                let num = 0
-                data.forEach((item) => {
-                    if (item.hasError) {
-                        num++
-                    } else if (item.relay > relayWarn) {
-                        num++
-                    }
-                })
-                return num
-            },
             ...mapMutations({
-                setTitle: types.SET_TITLE,
-                setWarnsReplication: types.SET_WARNS_REPLICATION
+                setTitle: types.SET_TITLE
             })
         },
         components: {

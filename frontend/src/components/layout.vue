@@ -2,21 +2,20 @@
     <div class="layout">
         <Row type="flex">
             <i-col span="4" class="layout-menu-left">
-                <Menu theme="dark" :active-name="activeMenu" width="auto" :open-names="['1']" @on-select="menuSelected">
+                <Menu theme="dark" :active-name="activeMenu" width="auto" :open-names="openMenuNames" @on-select="menuSelected" ref="menu">
                     <div class="layout-logo-left">
                         超级监控系统
                     </div>
-                    <Submenu name="1" >
+                    <Submenu :name="menu.menuName" v-for="menu in menus" :key="menu.menuName">
                         <template slot="title">
                             <Icon type="ios-navigate"></Icon>
-                            MySQL类别
+                            {{ menu.menuName }}
                         </template>
-                        
-                            <Menu-item :name="menu.path" v-for="menu in menus" :key="menu.name">
-                                <Badge :count="menu.badge">
-                                    <span class="badge">{{ menu.name }}</span>
-                                </Badge>
-                            </Menu-item>
+                        <Menu-item :name="subMenu.path" v-for="subMenu in menu.subMenus" :key="subMenu.name">
+                            <Badge :count="warns[subMenu.name]">
+                                <span class="badge">{{ subMenu.dispaly }}</span>
+                            </Badge>
+                        </Menu-item>
                     </Submenu>
                 </Menu>
             </i-col>
@@ -36,56 +35,141 @@
                 </div>
             </i-col>
         </Row>
+        <!-- <Spin size="large" fix v-if="menus.length === 0"></Spin> -->
     </div>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapMutations, mapActions } from 'vuex'
+    import { getMenus } from 'api/menu'
+    import { getBases } from 'api/base'
+    import { getCaches } from 'api/cache'
+    import { getReplications } from 'api/replication'
+    import * as types from 'store/mutation-types'
+    import { CODE_OK, intervalTime } from 'constants/constants'
+    import { expand } from 'common/js/expand'
+    import CacheExpand from '@/components/cache/cache-expand-row'
+    import ReplicationExpand from '@/components/replication/replication-expand-row'
+    import { resolveListTo2 } from 'common/js/utils'
 
     export default {
-        methods: {
-            menuSelected(menuRoute) {
-                this.$router.push({
-                    path: menuRoute
-                })
+        data() {
+            return {
+                menus: [],
+                openMenuNames: []
             }
         },
         computed: {
-            menus() {
-                return [
-                    {
-                        name: '基本状态',
-                        path: '/bases',
-                        desc: '显示数据库的基本状态',
-                        badge: this.warns['base']
-                    },
-                    {
-                        name: '缓存状态',
-                        path: '/caches',
-                        desc: '显示数据库的缓存信息',
-                        badge: this.warns['cache']
-                    },
-                    {
-                        name: '复制状态',
-                        path: '/replications',
-                        desc: '显示数据库的主从复制状态',
-                        badge: this.warns['replication']
-                    }
-                ]
-            },
             ...mapGetters([
                 'title',
                 'warns'
             ])
         },
         created() {
-            let currentRoute = this.$router.currentRoute.path
-            if (currentRoute === '/') {
+            this._getMenus()
+            this._setCurrentRoute()
+        },
+        mounted() {
+            // 轮询获取基础数据
+            this._getData()
+            this.interval = window.setInterval(() => {
+                // 获取数据的逻辑
+                this._getData()
+            }, intervalTime)
+
+            // 原先使用的是$nextTick方法,但是,不知道为啥,那时还没渲染完页面
+            window.setTimeout(() => {
+                let menu = this.$refs.menu
+                menu.updateActiveName()
+                menu.updateOpened()
+            }, 20)
+        },
+        deactivated() {
+            if (this.interval) {
+                window.clearInterval(this.interval)
+            }
+        },
+        methods: {
+            menuSelected(menuRoute) {
                 this.$router.push({
-                    path: '/bases'
+                    path: menuRoute
                 })
-                this.activeMenu = '/bases'
-            } else {
-                this.activeMenu = currentRoute
+            },
+
+            ...mapMutations({
+                'setBaseData': types.SET_BASE_DATA,
+                'setCacheData': types.SET_CACHE_DATA
+            }),
+
+            ...mapActions([
+                'setReplicationData'
+            ]),
+
+            _getMenus() {
+                getMenus().then((res) => {
+                    if (res.code === CODE_OK) {
+                        let menuData = res.data
+                        if (menuData.length > 0) {
+                            menuData.sort((a, b) => a.orderNum - b.orderNum)
+                            menuData.forEach((menu) => {
+                                this.openMenuNames.push(menu.menuName)
+                                menu.subMenus.sort((a, b) => a.orderNum - b.orderNum)
+                            })
+                            this.menus = menuData
+                        }
+                    } else {
+                        this.$Notice.error({
+                            title: '获取菜单错误',
+                            desc: '请检查服务器连接是否正确'
+                        })
+                    }
+                })
+            },
+
+            _setCurrentRoute() {
+                let currentRoute = this.$router.currentRoute.path
+                if (currentRoute === '/') {
+                    this.$router.push({
+                        path: '/bases'
+                    })
+                    this.activeMenu = '/bases'
+                } else {
+                    this.activeMenu = currentRoute
+                }
+            },
+
+            _getData() {
+                this._getBaseData()
+                this._getCacheData()
+                this._getReplicationData()
+            },
+
+            _getBaseData() {
+                getBases().then((res) => {
+                    if (res.code === CODE_OK) {
+                        this.setBaseData(res.data)
+                    }
+                })
+            },
+
+            _getCacheData() {
+                getCaches().then((res) => {
+                    if (res.code === CODE_OK) {
+                        // 加入展开的选项设置
+                        res.data.forEach(cache => cache.columns.unshift(expand(CacheExpand)))
+                        this.setCacheData(resolveListTo2(res.data))
+                    }
+                })
+            },
+
+            _getReplicationData() {
+                getReplications().then((res) => {
+                    if (res.code === CODE_OK) {
+                        // 加入展开的选项设置
+                        let data = res.data
+                        data.columns.unshift(expand(ReplicationExpand))
+                        this.setReplicationData(data)
+                    }
+                })
             }
         }
     }

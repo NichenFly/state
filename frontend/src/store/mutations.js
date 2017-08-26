@@ -12,6 +12,15 @@ const mutations = {
     },
     [types.SET_WARNS_REPLICATION](state, number) {
         state.warns.replication = number
+    },
+    [types.SET_BASE_DATA](state, data) {
+        state.baseData = data
+    },
+    [types.SET_CACHE_DATA](state, data) {
+        state.cacheData = data
+    },
+    [types.SET_REPLICATION_DATA](state, data) {
+        state.replicationData = data
     }
 }
 

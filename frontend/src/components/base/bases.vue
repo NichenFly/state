@@ -6,38 +6,19 @@
 </template>
 <script>
     import BaseCard from '@/components/base/base-card'
-    import { mapMutations } from 'vuex'
+    import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { intervalTime } from 'constants/constants'
-    import { getBases } from 'api/base'
 
     export default {
-        data() {
-            return {
-                baseData: []
-            }
+        computed: {
+            ...mapGetters([
+                'baseData'
+            ])
         },
         activated() {
             this.setTitle('展示数据库的基本信息')
-            this._getData()
-            this.interval = window.setInterval(() => {
-                // 获取数据的逻辑
-                this._getData()
-            }, intervalTime)
-        },
-        deactivated() {
-            if (this.interval) {
-                window.clearInterval(this.interval)
-            }
         },
         methods: {
-            _getData() {
-                getBases().then((res) => {
-                    if (res.code === 200) {
-                        this.baseData = res.data
-                    }
-                })
-            },
             ...mapMutations({
                 setTitle: types.SET_TITLE
             })
