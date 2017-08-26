@@ -8,6 +8,10 @@ export function resolveListTo2 (dataList) {
             list.push(tmpList)
             tmpList = []
         }
+        if (index === dataList.length - 1) {
+            list.push(tmpList)
+        }
     })
+    console.log(list)
     return list
 }

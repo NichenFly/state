@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Row class="rows" v-for="(caches, index) in cacheData" :key="index">
+        <Row class="rows" v-for="(caches, index) in cacheList" :key="index">
             <Col span="12" class="card" v-for="cache in caches" :key="cache.title">
                 <Card>
                     <p slot="title"> {{cache.title}} </p>
@@ -21,11 +21,6 @@
             cacheList: {
                 type: Array,
                 default: []
-            }
-        },
-        computed: {
-            cacheData() {
-                return this.cacheList
             }
         },
         components: {
