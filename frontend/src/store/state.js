@@ -7,5 +7,9 @@ export default {
     },
     baseData: [],
     cacheData: [],
-    replicationData: []
+    replicationData: [],
+    expand: {
+        caches: {},
+        replications: {}
+    }
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table :row-class-name="rowClassName" :columns="replicationData.columns" :data="replicationData.data" v-if="replicationData.columns && replicationData.columns.length"></Table>
+        <Table @on-expand="expand" :row-class-name="rowClassName" :columns="replicationData.columns" :data="replicationData.data" v-if="replicationData.columns && replicationData.columns.length"></Table>
         <Spin size="large" fix v-if="!replicationData.columns || replicationData.columns.length === 0"></Spin>
     </div>
 </template>
@@ -30,8 +30,13 @@
                 }
                 return ''
             },
+            expand(data, status) {
+                let changedData = Object.assign({status: status}, data)
+                this.setExpand(changedData)
+            },
             ...mapMutations({
-                setTitle: types.SET_TITLE
+                setTitle: types.SET_TITLE,
+                setExpand: types.SET_EXPAND_REPLICATION
             })
         },
         components: {

@@ -61,7 +61,9 @@
         computed: {
             ...mapGetters([
                 'title',
-                'warns'
+                'warns',
+                'expandCaches',
+                'expandReplications'
             ])
         },
         created() {
@@ -155,7 +157,17 @@
                 getCaches().then((res) => {
                     if (res.code === CODE_OK) {
                         // 加入展开的选项设置
-                        res.data.forEach(cache => cache.columns.unshift(expand(CacheExpand)))
+                        res.data.forEach(cache => {
+                            cache.columns.unshift(expand(CacheExpand))
+
+                            // 为保存展开状态做的变量保存,在传递事件时会带着,用于定位具体的某个数据项
+                            cache.data.forEach((d) => {
+                                d.titleVarible = `${cache.title}_${d.variable}`
+                                if (this.expandCaches[d.titleVarible]) {
+                                    d._expanded = true
+                                }
+                            })
+                        })
                         this.setCacheData(resolveListTo2(res.data))
                     }
                 })
@@ -167,6 +179,13 @@
                         // 加入展开的选项设置
                         let data = res.data
                         data.columns.unshift(expand(ReplicationExpand))
+
+                        // expand的状态设置
+                        data.data.forEach((d) => {
+                            if (this.expandReplications[d.host]) {
+                                d._expanded = true
+                            }
+                        })
                         this.setReplicationData(data)
                     }
                 })
