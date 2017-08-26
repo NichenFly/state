@@ -12,6 +12,5 @@ export function resolveListTo2 (dataList) {
             list.push(tmpList)
         }
     })
-    console.log(list)
     return list
 }
