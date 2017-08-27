@@ -19,7 +19,6 @@
         },
         activated() {
             this.$nextTick(() => {
-                console.log(this.menuDesc)
                 this.setTitle(this.menuDesc[basePath])
             })
         },
