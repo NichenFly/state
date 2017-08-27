@@ -1,13 +1,33 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import iView from 'iview'
-import Layout from '@/components/layout'
-import Bases from '@/components/base/bases'
-import Replications from '@/components/replication/replications'
-import Caches from '@/components/cache/caches'
 
 Vue.use(Router)
 Vue.use(iView)
+
+const Layout = (resolve) => {
+    import('@/components/layout').then((module) => {
+        resolve(module)
+    })
+}
+
+const Bases = (resolve) => {
+    import('@/components/base/bases').then((module) => {
+        resolve(module)
+    })
+}
+
+const Caches = (resolve) => {
+    import('@/components/cache/caches').then((module) => {
+        resolve(module)
+    })
+}
+
+const Replications = (resolve) => {
+    import('@/components/replication/replications').then((module) => {
+        resolve(module)
+    })
+}
 
 export default new Router({
     mode: 'history',

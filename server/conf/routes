@@ -4,9 +4,9 @@
 
 # Home page
 GET     /                                       staticFile:public/index.html
-GET		/base									staticFile:public/index.html
-GET		/cache									staticFile:public/index.html
-GET		/replication							staticFile:public/index.html
+GET		/bases									staticFile:public/index.html
+GET		/caches									staticFile:public/index.html
+GET		/replications							staticFile:public/index.html
 
 GET		/mysql									Application.mysql
 
