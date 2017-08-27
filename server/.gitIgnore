@@ -1,5 +1,6 @@
 eclipse/
 .project
-tmp
+tmp/
 .settings
-.classpath
+.cla`sspath
+logs/
