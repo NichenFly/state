@@ -27,6 +27,6 @@ export const expandWidth = 50
 export const relayWarn = 10
 
 // 标题显示内容
-export const infoTitleBase = '展示数据库的基本信息'
-export const infoTitleCache = '展示数据库的复制状态信息'
-export const infoTitleReplication = '展示数据的主从复制信息'
+export const basePath = '/bases'
+export const cachePath = '/caches'
+export const replicationPath = '/replications'

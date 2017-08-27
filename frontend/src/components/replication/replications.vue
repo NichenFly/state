@@ -8,16 +8,17 @@
     import ExpandRow from './replication-expand-row'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { relayWarn, infoTitleReplication } from 'constants/constants'
+    import { relayWarn, replicationPath } from 'constants/constants'
 
     export default {
         computed: {
             ...mapGetters([
-                'replicationData'
+                'replicationData',
+                'menuDesc'
             ])
         },
         activated() {
-            this.setTitle(infoTitleReplication)
+            this.setTitle(this.menuDesc[replicationPath])
         },
         methods: {
             rowClassName (row, index) {

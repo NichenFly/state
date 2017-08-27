@@ -22,6 +22,9 @@ const mutations = {
     [types.SET_REPLICATION_DATA](state, data) {
         state.replicationData = data
     },
+    [types.SET_MENU_DESC](state, data) {
+        state.menuDesc = data
+    },
     [types.SET_EXPAND_CACHE](state, data) {
         state.expand.caches[data.titleVarible] = data.status
     },

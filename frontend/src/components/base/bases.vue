@@ -8,16 +8,20 @@
     import BaseCard from '@/components/base/base-card'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { infoTitleBase } from 'constants/constants'
+    import { basePath } from 'constants/constants'
 
     export default {
         computed: {
             ...mapGetters([
-                'baseData'
+                'baseData',
+                'menuDesc'
             ])
         },
         activated() {
-            this.setTitle(infoTitleBase)
+            this.$nextTick(() => {
+                console.log(this.menuDesc)
+                this.setTitle(this.menuDesc[basePath])
+            })
         },
         methods: {
             ...mapMutations({

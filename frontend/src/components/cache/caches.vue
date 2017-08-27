@@ -8,16 +8,17 @@
     import CacheCard from '@/components/cache/cache-card'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { infoTitleCache } from 'constants/constants'
+    import { cachePath } from 'constants/constants'
 
     export default {
         computed: {
             ...mapGetters([
-                'cacheData'
+                'cacheData',
+                'menuDesc'
             ])
         },
         activated() {
-            this.setTitle(infoTitleCache)
+            this.setTitle(this.menuDesc[cachePath])
         },
         methods: {
             ...mapMutations({

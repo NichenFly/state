@@ -35,7 +35,6 @@
                 </div>
             </i-col>
         </Row>
-        <!-- <Spin size="large" fix v-if="menus.length === 0"></Spin> -->
     </div>
 </template>
 <script>
@@ -62,6 +61,7 @@
             ...mapGetters([
                 'title',
                 'warns',
+                'menuDesc',
                 'expandCaches',
                 'expandReplications'
             ])
@@ -79,11 +79,11 @@
             }, intervalTime)
 
             // 原先使用的是$nextTick方法,但是,不知道为啥,那时还没渲染完页面
-            window.setTimeout(() => {
-                let menu = this.$refs.menu
-                menu.updateActiveName()
-                menu.updateOpened()
-            }, 20)
+            // window.setTimeout(() => {
+            //     let menu = this.$refs.menu
+            //     menu.updateActiveName()
+            //     menu.updateOpened()
+            // }, 20)
         },
         deactivated() {
             if (this.interval) {
@@ -99,7 +99,9 @@
 
             ...mapMutations({
                 'setBaseData': types.SET_BASE_DATA,
-                'setCacheData': types.SET_CACHE_DATA
+                'setCacheData': types.SET_CACHE_DATA,
+                'setMenuDesc': types.SET_MENU_DESC,
+                'setTitle': types.SET_TITLE
             }),
 
             ...mapActions([
@@ -112,11 +114,23 @@
                         let menuData = res.data
                         if (menuData.length > 0) {
                             menuData.sort((a, b) => a.orderNum - b.orderNum)
+                            let menuDesc = {}
                             menuData.forEach((menu) => {
                                 this.openMenuNames.push(menu.menuName)
                                 menu.subMenus.sort((a, b) => a.orderNum - b.orderNum)
+
+                                menu.subMenus.forEach((subMenu) => {
+                                    menuDesc[subMenu.path] = subMenu.desc
+                                })
                             })
+                            this.setMenuDesc(menuDesc)
+                            this._setCurrentTitle()
                             this.menus = menuData
+                            this.$nextTick(() => {
+                                let menu = this.$refs.menu
+                                menu.updateActiveName()
+                                menu.updateOpened()
+                            })
                         }
                     } else {
                         this.$Notice.error({
@@ -137,6 +151,14 @@
                 } else {
                     this.activeMenu = currentRoute
                 }
+            },
+
+            _setCurrentTitle() {
+                let currentRoute = this.$router.currentRoute.path
+                if (currentRoute === '/') {
+                    currentRoute = '/bases'
+                }
+                this.setTitle(this.menuDesc[currentRoute])
             },
 
             _getData() {
