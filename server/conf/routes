@@ -3,7 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET     /                                       staticFile:public/index.html
+GET		/base									staticFile:public/index.html
+GET		/cache									staticFile:public/index.html
+GET		/replication							staticFile:public/index.html
 
 GET		/mysql									Application.mysql
 
@@ -12,6 +15,8 @@ GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
+GET		/static/								staticDir:public/static
 
 # Catch all
+* 		/api/{controller}/{action}				{controller}.{action}
 *       /{controller}/{action}                  {controller}.{action}
