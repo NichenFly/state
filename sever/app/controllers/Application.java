@@ -16,8 +16,6 @@ import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
-import models.*;
-
 public class Application extends Controller {
 
 	static List<String> ipList = new ArrayList<String>();
