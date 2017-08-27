@@ -9,21 +9,21 @@
                 {
                     "name": "base",
                     "orderNum": 11,
-                    "dispaly": "基本状态",
+                    "display": "基本状态",
                     "path": "/bases",
                     "desc": "显示数据库的基本状态"
                 },
                 {
                     "name": "cache",
                     "orderNum": 12,
-                    "dispaly": "缓存状态",
+                    "display": "缓存状态",
                     "path": "/caches",
                     "desc": "显示数据库的缓存信息"
                 },
                 {
                     "name": "replication",
                     "orderNum": 13,
-                    "dispaly": "复制状态",
+                    "display": "复制状态",
                     "path": "/replications",
                     "desc": "显示数据库的主从复制状态"
                 }

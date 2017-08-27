@@ -13,7 +13,7 @@
                         </template>
                         <Menu-item :name="subMenu.path" v-for="subMenu in menu.subMenus" :key="subMenu.name">
                             <Badge :count="warns[subMenu.name]">
-                                <span class="badge">{{ subMenu.dispaly }}</span>
+                                <span class="badge">{{ subMenu.display }}</span>
                             </Badge>
                         </Menu-item>
                     </Submenu>

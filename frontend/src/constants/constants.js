@@ -2,8 +2,8 @@
 export const CODE_OK = 200
 
 // 获取惨淡数据的url
-// /api/getMenus
-export const menusUrl = '/static/api/menus.json'
+// export const menusUrl = '/static/api/menus.json'
+export const menusUrl = '/api/menuController/getMenus'
 
 // 获取基础数据的url
 // /api/getBases

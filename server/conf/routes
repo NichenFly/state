@@ -10,6 +10,10 @@ GET		/replications							staticFile:public/index.html
 
 GET		/mysql									Application.mysql
 
+GET 	/api/getMenus							MenuController.getMenus
+
+GET		/api/mysql/getBases						MySQLController.getBases
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
