@@ -51,10 +51,12 @@ public class MySqlDBUtil {
 	 * @return
 	 */
 	public static List<String> getBases(String host, String port, String user, String passwd){
-		String cmd = "base shell/mysql-status.sh " + "-h " + host + " " + user + " " + passwd;
+		String cmd = "mysql " + "-h" + host + " -u" + user + " -p" + passwd + " -e status";
+		System.out.println(cmd);
 		List<String> infos = new ArrayList<String>();
 		try {
-			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
+//			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
+			Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
 			int statusCode = process.waitFor();
 			if (statusCode == 0) {
 				InputStream inputStream = process.getInputStream();
