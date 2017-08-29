@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    xxxx
+                    xxx
                 </div>
             </i-col>
         </Row>
@@ -40,15 +40,8 @@
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex'
     import { getMenus } from 'api/menu'
-    import { getBases } from 'api/base'
-    import { getCaches } from 'api/cache'
-    import { getReplications } from 'api/replication'
     import * as types from 'store/mutation-types'
     import { CODE_OK, intervalTime } from 'constants/constants'
-    import { expand } from 'common/js/expand'
-    import CacheExpand from '@/components/cache/cache-expand-row'
-    import ReplicationExpand from '@/components/replication/replication-expand-row'
-    import { resolveListTo2 } from 'common/js/utils'
 
     export default {
         data() {
@@ -61,9 +54,7 @@
             ...mapGetters([
                 'title',
                 'warns',
-                'menuDesc',
-                'expandCaches',
-                'expandReplications'
+                'menuDesc'
             ])
         },
         created() {
@@ -72,18 +63,11 @@
         },
         mounted() {
             // 轮询获取基础数据
-            this._getData()
+            this.setData()
             this.interval = window.setInterval(() => {
                 // 获取数据的逻辑
-                this._getData()
+                this.setData()
             }, intervalTime)
-
-            // 原先使用的是$nextTick方法,但是,不知道为啥,那时还没渲染完页面
-            // window.setTimeout(() => {
-            //     let menu = this.$refs.menu
-            //     menu.updateActiveName()
-            //     menu.updateOpened()
-            // }, 20)
         },
         deactivated() {
             if (this.interval) {
@@ -98,14 +82,12 @@
             },
 
             ...mapMutations({
-                'setBaseData': types.SET_BASE_DATA,
-                'setCacheData': types.SET_CACHE_DATA,
                 'setMenuDesc': types.SET_MENU_DESC,
                 'setTitle': types.SET_TITLE
             }),
 
             ...mapActions([
-                'setReplicationData'
+                'setData'
             ]),
 
             _getMenus() {
@@ -159,58 +141,6 @@
                     currentRoute = '/bases'
                 }
                 this.setTitle(this.menuDesc[currentRoute])
-            },
-
-            _getData() {
-                this._getBaseData()
-                this._getCacheData()
-                this._getReplicationData()
-            },
-
-            _getBaseData() {
-                getBases().then((res) => {
-                    if (res.code === CODE_OK) {
-                        this.setBaseData(res.data)
-                    }
-                })
-            },
-
-            _getCacheData() {
-                getCaches().then((res) => {
-                    if (res.code === CODE_OK) {
-                        // 加入展开的选项设置
-                        res.data.forEach(cache => {
-                            cache.columns.unshift(expand(CacheExpand))
-
-                            // 为保存展开状态做的变量保存,在传递事件时会带着,用于定位具体的某个数据项
-                            cache.data.forEach((d) => {
-                                d.titleVarible = `${cache.title}_${d.variable}`
-                                if (this.expandCaches[d.titleVarible]) {
-                                    d._expanded = true
-                                }
-                            })
-                        })
-                        this.setCacheData(resolveListTo2(res.data))
-                    }
-                })
-            },
-
-            _getReplicationData() {
-                getReplications().then((res) => {
-                    if (res.code === CODE_OK) {
-                        // 加入展开的选项设置
-                        let data = res.data
-                        data.columns.unshift(expand(ReplicationExpand))
-
-                        // expand的状态设置
-                        data.data.forEach((d) => {
-                            if (this.expandReplications[d.host]) {
-                                d._expanded = true
-                            }
-                        })
-                        this.setReplicationData(data)
-                    }
-                })
             }
         }
     }
