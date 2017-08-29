@@ -29,7 +29,7 @@ public class UpdateJob extends Job{
 			
 			MySqlDBUtil.getCaches(con);
 			
-			MySqlDBUtil.getReplications(con);
+			MySqlDBUtil.getReplications(mysqlHost, port, user, passwd);
 		
 		}
 	}

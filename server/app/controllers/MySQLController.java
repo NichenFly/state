@@ -27,11 +27,11 @@ import util.MySqlDBUtil;
 public class MySQLController extends Controller {
     
     public static void getBases() {
-    	
     	Result result = new Result();
     	result.code = 200;
     	result.msg = "成功";
-    	result.data = MySqlDBUtil.getBases("127.0.0.1", "3306", "root", "lttzhu@163com");
+    	Map<String, String> infos = MySqlDBUtil.getBases("10.18.13.34", "3306", "root", "Root1234@");
+    	result.data = infos;
     	renderJSON(result);
     }
     
@@ -39,7 +39,8 @@ public class MySQLController extends Controller {
     	Result result = new Result();
     	result.code = 200;
     	result.msg = "成功";
-    	result.data = new ArrayList<Object>();
+    	Connection con = MySqlDBUtil.getMysqlConnection("10.18.13.34", "3306", "root", "Root1234@");
+    	result.data = MySqlDBUtil.getCaches(con);
     	renderJSON(result);
     }
     
@@ -47,7 +48,8 @@ public class MySQLController extends Controller {
     	Result result = new Result();
     	result.code = 200;
     	result.msg = "成功";
-    	result.data = new ArrayList<Object>();
+//    	Connection con = MySqlDBUtil.getMysqlConnection("10.18.13.34", "3306", "root", "Root1234@");
+    	result.data = MySqlDBUtil.getReplications("10.18.13.35", "3306", "root", "Root1234@");
     	renderJSON(result);
     }
 
