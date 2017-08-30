@@ -8,6 +8,8 @@ export const cacheData = state => state.cacheData
 
 export const replicationData = state => state.replicationData
 
+export const menus = state => state.menus
+
 export const menuDesc = state => state.menuDesc
 
 export const expandCaches = state => state.expand.caches

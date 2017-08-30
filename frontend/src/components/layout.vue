@@ -39,26 +39,43 @@
 </template>
 <script>
     import { mapGetters, mapMutations, mapActions } from 'vuex'
-    import { getMenus } from 'api/menu'
-    import * as types from 'store/mutation-types'
-    import { CODE_OK, intervalTime } from 'constants/constants'
+    import { SET_TITLE } from 'store/mutation-types'
+    import { intervalTime } from 'constants/constants'
 
     export default {
-        data() {
-            return {
-                menus: [],
-                openMenuNames: []
-            }
-        },
         computed: {
             ...mapGetters([
                 'title',
                 'warns',
+                'menus',
                 'menuDesc'
             ])
         },
+        watch: {
+            menus: function(newMenu) {
+                if (newMenu.length) {
+                    // 展开所有的菜单项
+                    newMenu.forEach((menu) => {
+                        this.openMenuNames.push(menu.menuName)
+                    })
+
+                    // 更新菜单显示状态
+                    this.$nextTick(() => {
+                        let menu = this.$refs.menu
+                        menu.updateActiveName()
+                        menu.updateOpened()
+                    })
+                }
+            },
+            menuDesc: function(newMenuDesc) {
+                if (newMenuDesc) {
+                    this._setCurrentTitle()
+                }
+            }
+        },
         created() {
-            this._getMenus()
+            this.openMenuNames = []
+            this.getMenu()
             this._setCurrentRoute()
         },
         mounted() {
@@ -82,46 +99,13 @@
             },
 
             ...mapMutations({
-                'setMenuDesc': types.SET_MENU_DESC,
-                'setTitle': types.SET_TITLE
+                'setTitle': SET_TITLE
             }),
 
             ...mapActions([
-                'setData'
+                'setData',
+                'getMenu'
             ]),
-
-            _getMenus() {
-                getMenus().then((res) => {
-                    if (res.code === CODE_OK) {
-                        let menuData = res.data
-                        if (menuData.length > 0) {
-                            menuData.sort((a, b) => a.orderNum - b.orderNum)
-                            let menuDesc = {}
-                            menuData.forEach((menu) => {
-                                this.openMenuNames.push(menu.menuName)
-                                menu.subMenus.sort((a, b) => a.orderNum - b.orderNum)
-
-                                menu.subMenus.forEach((subMenu) => {
-                                    menuDesc[subMenu.path] = subMenu.desc
-                                })
-                            })
-                            this.setMenuDesc(menuDesc)
-                            this._setCurrentTitle()
-                            this.menus = menuData
-                            this.$nextTick(() => {
-                                let menu = this.$refs.menu
-                                menu.updateActiveName()
-                                menu.updateOpened()
-                            })
-                        }
-                    } else {
-                        this.$Notice.error({
-                            title: '获取菜单错误',
-                            desc: '请检查服务器连接是否正确'
-                        })
-                    }
-                })
-            },
 
             _setCurrentRoute() {
                 let currentRoute = this.$router.currentRoute.path

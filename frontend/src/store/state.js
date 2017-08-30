@@ -8,6 +8,7 @@ export default {
     baseData: [],
     cacheData: [],
     replicationData: [],
+    menus: [],
     menuDesc: {},
     expand: {
         caches: {},

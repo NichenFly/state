@@ -7,6 +7,7 @@ import { expand } from 'common/js/expand'
 import CacheExpand from '@/components/cache/cache-expand-row'
 import ReplicationExpand from '@/components/replication/replication-expand-row'
 import { resolveListTo2 } from 'common/js/utils'
+import { getMenus } from 'api/menu'
 
 function _getWarns(data) {
     let num = 0
@@ -66,6 +67,32 @@ function _getReplicationData({commit, state}) {
             // this.setReplicationData(data)
             commit(types.SET_REPLICATION_DATA, data)
             commit(types.SET_WARNS_REPLICATION, _getWarns(data.data))
+        }
+    })
+}
+
+export const getMenu = function({commit, state}) {
+    getMenus().then((res) => {
+        if (res.code === CODE_OK) {
+            let menuData = res.data
+            if (menuData.length > 0) {
+                menuData.sort((a, b) => a.orderNum - b.orderNum)
+                let menuDesc = {}
+                menuData.forEach((menu) => {
+                    // 子菜单排序
+                    menu.subMenus.sort((a, b) => a.orderNum - b.orderNum)
+                    menu.subMenus.forEach((subMenu) => {
+                        menuDesc[subMenu.path] = subMenu.desc
+                    })
+                })
+                commit(types.SET_MENU_DESC, menuDesc)
+                commit(types.SET_MENUS, menuData)
+            }
+        } else {
+            this.$Notice.error({
+                title: '获取菜单错误',
+                desc: '请检查服务器连接是否正确'
+            })
         }
     })
 }

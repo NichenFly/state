@@ -12,6 +12,8 @@ export const SET_CACHE_DATA = 'SET_CACHE_DATA'
 
 export const SET_REPLICATION_DATA = 'SET_REPLICATION_DATA'
 
+export const SET_MENUS = 'SET_MENUS'
+
 export const SET_MENU_DESC = 'SET_MENU_DESC'
 
 export const SET_EXPAND_CACHE = 'SET_EXPAND_CACHE'
