@@ -55,20 +55,15 @@ public class MySqlDBUtil {
 	 */
 	public static Map<String, String> getBases(String host, String port, String user, String passwd) {
 		String cmd = "mysql " + "-h" + host + " -u" + user + " -p" + passwd + " -e status";
-		System.out.println(cmd);
 		Map<String, String> infoMap = new HashMap<String, String>();
 		try {
 			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
-			// Process process = Runtime.getRuntime().exec(new String[]{"cmd",
-			// "-c", cmd});
 			int statusCode = process.waitFor();
 			if (statusCode == 0) {
 				InputStream inputStream = process.getInputStream();
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 				String line = null;
-				StringBuilder stringBuilder = new StringBuilder();
 				while ((line = bufferedReader.readLine()) != null) {
-					stringBuilder.append(line + "\n");
 					if (line.startsWith("msyql") || line.startsWith("Uptime")) {
 						String[] spliteds = line.split(":");
 						infoMap.put(spliteds[0].trim(), spliteds[1].trim());
@@ -82,7 +77,6 @@ public class MySqlDBUtil {
 				}
 				inputStream.close();
 				bufferedReader.close();
-				Logger.info("%s", stringBuilder.toString());
 			} else {
 				// 非正确退出,输出错误信息
 				InputStream errorInputStream = process.getErrorStream();
@@ -132,12 +126,9 @@ public class MySqlDBUtil {
 	 */
 	public static Map<String, String> getReplications(String host, String port, String user, String passwd) {
 		String cmd = "mysql " + "-h" + host + " -P" + port + " -u" + user + " -p" + passwd + " -e\"show slave status\\G\"";
-		System.out.println(cmd);
 		Map<String, String> infoMap = new HashMap<String, String>();
 		try {
 			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
-			// Process process = Runtime.getRuntime().exec(new String[]{"cmd",
-			// "-c", cmd});
 			int statusCode = process.waitFor();
 			if (statusCode == 0) {
 				InputStream inputStream = process.getInputStream();

@@ -1,0 +1,5 @@
+server/eclipse/.gitignore
+server/eclipse/.project
+server/eclipse/.settings/org.eclipse.jdt.core.prefs
+server/eclipse/Test server.launch
+server/eclipse/server.launch

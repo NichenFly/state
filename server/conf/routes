@@ -13,6 +13,8 @@ GET		/mysql									Application.mysql
 GET 	/api/getMenus							MenuController.getMenus
 
 GET		/api/mysql/getBases						MySQLController.getBases
+GET		/api/mysql/getCaches					MySQLController.getCaches
+GET		/api/mysql/getReplications				MySQLController.getReplications
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
