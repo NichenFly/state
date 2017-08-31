@@ -146,11 +146,11 @@ public class UpdateJob extends Job {
 		
 		boolean slave = replicationsMap.containsKey("Slave_IO_State");
 		if(slave){
-			replicationsMap.put("masterSlave", "master");
-			replicationsMap.put("hasError", "no");
-			return replicationsMap;
+			replicationsMap.put("masterSlave", "slave");
 		} else {
-			replicationsMap.put("masterSlave", "salve");
+			replicationsMap.put("hasError", "no");
+			replicationsMap.put("masterSlave", "master");
+			return replicationsMap;
 		}
 		
 		String slaveIOState = replicationsMap.get("Slave_IO_State");

@@ -1,6 +1,10 @@
 <template>
     <div>
-        <Table @on-expand="expand" :row-class-name="rowClassName" :columns="replicationData.columns" :data="replicationData.data" v-if="replicationData.columns && replicationData.columns.length"></Table>
+        <Table  @on-expand="expand" 
+                :row-class-name="rowClassName" 
+                :columns="replicationData.columns" 
+                :data="replicationData.data" 
+                v-if="replicationData.columns && replicationData.columns.length"></Table>
         <Spin size="large" fix v-if="!replicationData.columns || replicationData.columns.length === 0"></Spin>
     </div>
 </template>
