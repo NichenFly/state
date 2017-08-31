@@ -52,7 +52,7 @@ public class UpdateJob extends Job {
 
 			Logger.info("Get %s's Replications info ...", mysqlHost);
 			Map<String, String> replicationMap = MySqlDBUtil.getReplications(mysqlHost, port, user, passwd);
-			Cache.safeSet(REPLICATION_KEY + "_" + mysqlHost, replicationMap, "1mn");
+			Cache.safeSet(REPLICATION_KEY + "_" + mysqlHost, resolveReplicationsData(mysqlHost, replicationMap), "1mn");
 		}
 
 		Logger.info("Update Job End ....");
@@ -138,22 +138,34 @@ public class UpdateJob extends Job {
 	 * @param replicationsMap
 	 * @return
 	 */
-	private Map<String, Object> resolveReplicationsData(String host, Map<String, String> replicationsMap) {
-		Map<String, Object> replicationsData = new HashMap<String, Object>();
-		
+	private Map<String, String> resolveReplicationsData(String host, Map<String, String> replicationsMap) {
 		if(host == null || host.trim().equals("")){
-			return replicationsData;
+			return replicationsMap;
+		}
+		replicationsMap.put("host", host);
+		
+		boolean slave = replicationsMap.containsKey("Slave_IO_State");
+		if(slave){
+			replicationsMap.put("masterSlave", "master");
+			replicationsMap.put("hasError", "no");
+			return replicationsMap;
+		} else {
+			replicationsMap.put("masterSlave", "salve");
 		}
 		
+		String slaveIOState = replicationsMap.get("Slave_IO_State");
 		
-		Set<String> keySet = replicationsMap.keySet();
-		for(String key : keySet){
-			
+		if(slaveIOState == null || slaveIOState.trim().equals("")){
+			replicationsMap.put("state", "未启动slave服务");
+			replicationsMap.put("hasError", "no");
+		} else if (replicationsMap.get("Slave_SQL_Running").trim().equals("yes") && replicationsMap.get("Slave_IO_Running").trim().equals("yes")) {
+			replicationsMap.put("state", "正常");
+			replicationsMap.put("hasError", "no");
+		} else {
+			replicationsMap.put("state", "出错");
+			replicationsMap.put("hasError", "yes");
 		}
-		replicationsData.put("host", host);
-		replicationsData.put("masterSlave", "");
-		replicationsData.put("state", "");
 		
-		return replicationsData;
+		return replicationsMap;
 	}
 }
