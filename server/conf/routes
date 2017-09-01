@@ -8,8 +8,6 @@ GET		/bases									staticFile:public/index.html
 GET		/caches									staticFile:public/index.html
 GET		/replications							staticFile:public/index.html
 
-GET		/mysql									Application.mysql
-
 GET 	/api/getMenus							MenuController.getMenus
 
 GET		/api/mysql/getBases						MySQLController.getBases

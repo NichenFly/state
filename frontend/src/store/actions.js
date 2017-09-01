@@ -12,7 +12,7 @@ import { getMenus } from 'api/menu'
 function _getWarns(data) {
     let num = 0
     data.forEach((item) => {
-        if (item.hasError) {
+        if (item.hasError === 'yes') {
             num++
         } else if (item.relay > relayWarn) {
             num++

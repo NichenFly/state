@@ -51,8 +51,8 @@ public class MySQLController extends Controller {
 	    	infoList.add(infos);
     	}
     	
-    	result.code = 200;
-		result.msg = "成功";
+    	result.setCode(Result.OK);
+    	result.setMsg(Result.OK_MSG);
     	result.data = infoList;
     	renderJSON(result);
     }
@@ -79,8 +79,8 @@ public class MySQLController extends Controller {
 	    	infoList.add(infos);
     	}
     	
-    	result.code = 200;
-		result.msg = "成功";
+    	result.setCode(Result.OK);
+		result.setMsg(Result.OK_MSG);
     	result.data = infoList;
     	renderJSON(result);
     }
@@ -134,33 +134,10 @@ public class MySQLController extends Controller {
     	}
     	
     	infos.put("data", infoList);
-    	
+    	result.setCode(Result.OK);
+    	result.setMsg(Result.OK_MSG);
     	result.data = infos;
     	renderJSON(result);
-    }
-    
-    private static void replicationColumns(){
-    	List<Map<String, Object>> columnsList = new ArrayList<Map<String, Object>>();
-		
-		Map<String, Object> hostKeyMap = new HashMap<String, Object>();
-		hostKeyMap.put("title", "主机");
-		hostKeyMap.put("key", "host");
-		columnsList.add(hostKeyMap);
-		
-		Map<String, Object> masterSlaveKeyMap = new HashMap<String, Object>();
-		masterSlaveKeyMap.put("title", "主/从");
-		masterSlaveKeyMap.put("key", "masterSlave");
-		columnsList.add(masterSlaveKeyMap);
-		
-		Map<String, Object> stateSlaveKeyMap = new HashMap<String, Object>();
-		stateSlaveKeyMap.put("title", "状态");
-		stateSlaveKeyMap.put("key", "state");
-		columnsList.add(stateSlaveKeyMap);
-		
-		Map<String, Object> relayKeyMap = new HashMap<String, Object>();
-		relayKeyMap.put("title", "时延(s)");
-		relayKeyMap.put("key", "relay");
-		columnsList.add(relayKeyMap);
     }
 
 }

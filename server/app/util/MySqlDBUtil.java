@@ -42,7 +42,8 @@ public class MySqlDBUtil {
 			String url = "jdbc:mysql://" + host + ":" + port + "/sys";
 			con = DriverManager.getConnection(url, user, passwd);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error("无法连接连接服务器: %s", host);
+//			e.printStackTrace();
 		}
 		return con;
 	}
@@ -79,6 +80,9 @@ public class MySqlDBUtil {
 				bufferedReader.close();
 			} else {
 				// 非正确退出,输出错误信息
+				
+				infoMap.put("state", "连接服务器出错");
+				
 				InputStream errorInputStream = process.getErrorStream();
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorInputStream));
 				String line = null;
@@ -145,6 +149,9 @@ public class MySqlDBUtil {
 				bufferedReader.close();
 			} else {
 				// 非正确退出,输出错误信息
+				
+				infoMap.put("state", "连接服务器出错");
+				
 				InputStream errorInputStream = process.getErrorStream();
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorInputStream));
 				String line = null;

@@ -40,14 +40,22 @@ public class UpdateJob extends Job {
 			String user = host.get("user");
 			String passwd = host.get("passwd");
 
-			Connection con = MySqlDBUtil.getMysqlConnection(mysqlHost, port, user, passwd);
+			
 
 			Logger.info("Get %s's Bases info ...", mysqlHost);
 			Map<String, String> basesMap = MySqlDBUtil.getBases(mysqlHost, port, user, passwd);
 			Cache.safeSet(BASES_KEY + "_" + mysqlHost, resolveBasesData(mysqlHost, basesMap), "1mn");
 
 			Logger.info("Get %s's Caches info ...", mysqlHost);
-			Map<String, String> cacheMap = MySqlDBUtil.getCaches(con);
+			Map<String, String> cacheMap = null;
+			Connection con = MySqlDBUtil.getMysqlConnection(mysqlHost, port, user, passwd);
+			if(con != null){
+				cacheMap = MySqlDBUtil.getCaches(con);
+			} else {
+				cacheMap = new HashMap<String, String>();
+				cacheMap.put("state", "无法连接");
+			}
+			
 			Cache.safeSet(CACHE_KEY + "_" + mysqlHost, resolveCachesData(mysqlHost, cacheMap), "1mn");
 
 			Logger.info("Get %s's Replications info ...", mysqlHost);
@@ -144,10 +152,17 @@ public class UpdateJob extends Job {
 		}
 		replicationsMap.put("host", host);
 		
+		if(replicationsMap.get("state") != null) {
+			replicationsMap.put("masterSlave", "-");
+			replicationsMap.put("hasError", "yes");
+			return replicationsMap;
+		}
+		
 		boolean slave = replicationsMap.containsKey("Slave_IO_State");
 		if(slave){
 			replicationsMap.put("masterSlave", "slave");
 		} else {
+			replicationsMap.put("state", "正常");
 			replicationsMap.put("hasError", "no");
 			replicationsMap.put("masterSlave", "master");
 			return replicationsMap;
@@ -158,7 +173,7 @@ public class UpdateJob extends Job {
 		if(slaveIOState == null || slaveIOState.trim().equals("")){
 			replicationsMap.put("state", "未启动slave服务");
 			replicationsMap.put("hasError", "no");
-		} else if (replicationsMap.get("Slave_SQL_Running").trim().equals("yes") && replicationsMap.get("Slave_IO_Running").trim().equals("yes")) {
+		} else if (replicationsMap.get("Slave_SQL_Running").trim().equals("Yes") && replicationsMap.get("Slave_IO_Running").trim().equals("Yes")) {
 			replicationsMap.put("state", "正常");
 			replicationsMap.put("hasError", "no");
 		} else {

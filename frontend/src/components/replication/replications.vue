@@ -26,7 +26,7 @@
         },
         methods: {
             rowClassName (row, index) {
-                if (row.hasError) {
+                if (row.hasError === 'yes') {
                     return 'table-error-row'
                 }
 
