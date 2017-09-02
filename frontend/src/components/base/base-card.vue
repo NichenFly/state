@@ -1,15 +1,13 @@
 <template>
     <div class="rows">
         <liquidfill-chart :option="option"></liquidfill-chart>
-        <liquidfill-chart :option="option"></liquidfill-chart>
-        <liquidfill-chart :option="option"></liquidfill-chart>
-        <liquidfill-chart :option="option"></liquidfill-chart>
-        <liquidfill-chart :option="option"></liquidfill-chart>
-        <liquidfill-chart :option="option"></liquidfill-chart>
     </div>
 </template>
 <script>
     // import {resolveListTo2} from 'common/js/utils'
+    /*
+    每个波浪有自己的运动频率,计算方式是:虚拟时间/增长数的垂直坐标系,本次的数据在增长时的倾角越大,速度越快
+    */
     import LiquidfillChart from 'base/echarts/liquidfill-base-chart'
 
     export default {
@@ -49,17 +47,23 @@
                         data: [{
                             name: 'query',
                             value: 0.6
-                        }, 0.5, {
-                            value: 0.4,
-                            amplitude: 15
                         }, {
+                            name: 'yyy',
+                            value: 0.5
+                        }, {
+                            name: 'xxx',
+                            value: 0.4
+                        }, {
+                            name: 'zzz',
                             value: 0.3,
-                            amplitude: 20,
-                            waveLength: 100
+                            phase: 3
                         }],
                         // waveAnimation: false,
                         radius: '90%',
-                        amplitude: 20,
+                        amplitude: 25,
+                        period: function (value, index) {
+                            return 2000 * index + 1000
+                        },
                         outline: {
                             show: false
                         },
