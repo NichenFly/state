@@ -14,6 +14,7 @@
     "axios": "^0.16.2",
     "compression": "^1.7.0",
     "compression-webpack-plugin": "^1.0.0",
+    "echarts-liquidfill": "^1.1.0",
     "iview": "^2.1.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",

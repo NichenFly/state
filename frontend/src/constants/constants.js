@@ -2,20 +2,20 @@
 export const CODE_OK = 200
 
 // 获取惨淡数据的url
-// export const menusUrl = '/static/api/menus.json'
-export const menusUrl = '/api/menuController/getMenus'
+export const menusUrl = '/static/api/menus.json'
+// export const menusUrl = '/api/menuController/getMenus'
 
 // 获取基础数据的url
-// export const basesUrl = '/static/api/getbases.json'
-export const basesUrl = '/api/mysqlController/getbases'
+export const basesUrl = '/static/api/getbases.json'
+// export const basesUrl = '/api/mysqlController/getbases'
 
 // 获取缓存数据的url
-// export const cachesUrl = '/static/api/getcaches.json'
-export const cachesUrl = '/api/mysqlController/getcaches'
+export const cachesUrl = '/static/api/getcaches.json'
+// export const cachesUrl = '/api/mysqlController/getcaches'
 
 // 获取复制信息的url
-// export const replicationsUrl = '/static/api/getReplications.json'
-export const replicationsUrl = '/api/mysqlController/getReplications'
+export const replicationsUrl = '/static/api/getReplications.json'
+// export const replicationsUrl = '/api/mysqlController/getReplications'
 
 // 轮询间隔 5000ms
 export const intervalTime = 5000
