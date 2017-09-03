@@ -45,18 +45,14 @@
                     series: [{
                         type: 'liquidFill',
                         data: [{
-                            name: 'query',
+                            name: 'Questions',
                             value: 0.6
                         }, {
-                            name: 'yyy',
-                            value: 0.5
+                            name: 'Threads',
+                            value: 0.45
                         }, {
-                            name: 'xxx',
-                            value: 0.4
-                        }, {
-                            name: 'zzz',
-                            value: 0.3,
-                            phase: 3
+                            name: 'Queries per second avg',
+                            value: 0.3
                         }],
                         // waveAnimation: false,
                         radius: '90%',
@@ -92,7 +88,7 @@
                     tooltip: {
                         show: true,
                         formatter: (params) => {
-                            console.log(params)
+                            console.log(params.data)
                             return 'xxx'
                         }
                     }

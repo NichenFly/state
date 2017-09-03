@@ -1,184 +1,48 @@
 {
     "code": 200,
     "msg": "成功",
-    "data": [{
-        "title": "10.18.13.4",
-        "columns": [
-            {
-                "title": "类别",
-                "key": "category",
-                "width": 170
-            },
-            {
-                "title": "状态",
-                "key": "status"
-            }
-        ],
-        "data": [
-            {
-                "category": "SSL",
-                "status": "Not in use"
-            },
-            {
-                "category": "Server version",
-                "status": "5.7.16-log MySQL Community Server (GPL)"
-            },
-            {
-                "category": "UNIX socket",
-                "status": "/var/lib/mysql/mysql.sock"
-            },
-            {
-                "category": "Uptime",
-                "status": "1 day 4 hours 12 min 43 sec"
-            },
-            {
-                "category": "Threads",
-                "status": 18
-            },
-            {
-                "category": "Questions",
-                "status": 14880
-            },
-            {
-                "category": "Slow queries",
-                "status": 1266
-            },
-            {
-                "category": "Opens",
-                "status": 426
-            },
-            {
-                "category": "Flush tables",
-                "status": 1
-            },
-            {
-                "category": "Open tables",
-                "status": 376
-            },
-            {
-                "category": "Queries per second avg",
-                "status": 0.146
-            }
-        ]
-    },
-    {
-        "title": "10.18.13.7",
-        "columns": [
-            {
-                "title": "类别",
-                "key": "category",
-                "width": 170
-            },
-            {
-                "title": "状态",
-                "key": "status"
-            }
-        ],
-        "data": [
-            {
-                "category": "SSL",
-                "status": "Not in use"
-            },
-            {
-                "category": "Server version",
-                "status": "5.7.16-log MySQL Community Server (GPL)"
-            },
-            {
-                "category": "UNIX socket",
-                "status": "/var/lib/mysql/mysql.sock"
-            },
-            {
-                "category": "Uptime",
-                "status": "1 day 4 hours 12 min 43 sec"
-            },
-            {
-                "category": "Threads",
-                "status": 18
-            },
-            {
-                "category": "Questions",
-                "status": 14880
-            },
-            {
-                "category": "Slow queries",
-                "status": 1266
-            },
-            {
-                "category": "Opens",
-                "status": 426
-            },
-            {
-                "category": "Flush tables",
-                "status": 1
-            },
-            {
-                "category": "Open tables",
-                "status": 376
-            },
-            {
-                "category": "Queries per second avg",
-                "status": 0.146
-            }
-        ]
-    },
-    {
-        "title": "10.18.13.8",
-        "columns": [
-            {
-                "title": "类别",
-                "key": "category",
-                "width": 170
-            },
-            {
-                "title": "状态",
-                "key": "status"
-            }
-        ],
-        "data": [
-            {
-                "category": "SSL",
-                "status": "Not in use"
-            },
-            {
-                "category": "Server version",
-                "status": "5.7.16-log MySQL Community Server (GPL)"
-            },
-            {
-                "category": "UNIX socket",
-                "status": "/var/lib/mysql/mysql.sock"
-            },
-            {
-                "category": "Uptime",
-                "status": "1 day 4 hours 12 min 43 sec"
-            },
-            {
-                "category": "Threads",
-                "status": 18
-            },
-            {
-                "category": "Questions",
-                "status": 14880
-            },
-            {
-                "category": "Slow queries",
-                "status": 1266
-            },
-            {
-                "category": "Opens",
-                "status": 426
-            },
-            {
-                "category": "Flush tables",
-                "status": 1
-            },
-            {
-                "category": "Open tables",
-                "status": 376
-            },
-            {
-                "category": "Queries per second avg",
-                "status": 0.146
-            }
-        ]
-    }]
+    "data": [
+        {
+            "title": "10.18.13.8",
+            "hasError": false,
+            "data": [
+                {
+                    "name": "Threads",
+                    "value": 0.6,
+                    "growth": 0.1
+                },
+                {
+                    "name": "Questions",
+                    "value": 0.45,
+                    "growth": 0.22
+                },
+                {
+                    "name": "Queries per second avg",
+                    "value": 0.3,
+                    "growth": 0.33
+                }
+            ]
+        },
+        {
+            "title": "10.18.13.7",
+            "hasError": false,
+            "data": [
+                {
+                    "name": "Threads",
+                    "value": 0.6,
+                    "growth": 0.1
+                },
+                {
+                    "name": "Questions",
+                    "value": 0.45,
+                    "growth": 0.22
+                },
+                {
+                    "name": "Queries per second avg",
+                    "value": 0.3,
+                    "growth": 0.1
+                }
+            ]
+        }
+    ]
 }

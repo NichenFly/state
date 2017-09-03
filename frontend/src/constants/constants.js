@@ -6,7 +6,7 @@ export const menusUrl = '/static/api/menus.json'
 // export const menusUrl = '/api/menuController/getMenus'
 
 // 获取基础数据的url
-export const basesUrl = '/static/api/getbases.json'
+export const basesUrl = '/static/api/bases.json'
 // export const basesUrl = '/api/mysqlController/getbases'
 
 // 获取缓存数据的url

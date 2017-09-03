@@ -42,8 +42,8 @@
                 baseOption: this.option,
                 media: this.media
             })
-            this.chart.getZr().on('click', function() {
-                console.log(arguments[0].topTarget.style.text)
+            this.chart.getZr().on('click', (event) => {
+                this.$emit('liquidfill-click', event.topTarget.style.text)
             })
         },
         components: {
@@ -54,6 +54,7 @@
 </script>
 <style lang="scss" scoped>
     .chart {
+        display: inline-flex;
         width: 200px;
         height: 200px;
     }
