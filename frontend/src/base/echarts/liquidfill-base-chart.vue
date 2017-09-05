@@ -33,6 +33,11 @@
                 }
             }
         },
+        watch: {
+            option() {
+                this.chart.resize()
+            }
+        },
         created() {
             this.chart = {}
         },

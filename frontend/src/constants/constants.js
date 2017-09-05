@@ -1,20 +1,22 @@
+const debug = process.env.NODE_ENV !== 'production'
+
 // 请求的返回状态
 export const CODE_OK = 200
 
 // 获取惨淡数据的url
-export const menusUrl = '/static/api/menus.json'
+export const menusUrl = debug ? '/static/api/menus.json' : '/api/menuController/getMenus'
 // export const menusUrl = '/api/menuController/getMenus'
 
 // 获取基础数据的url
-export const basesUrl = '/static/api/bases.json'
+export const basesUrl = debug ? '/static/api/bases.json' : '/api/mysqlController/getbases'
 // export const basesUrl = '/api/mysqlController/getbases'
 
 // 获取缓存数据的url
-export const cachesUrl = '/static/api/getcaches.json'
+export const cachesUrl = debug ? '/static/api/getcaches.json' : '/api/mysqlController/getcaches'
 // export const cachesUrl = '/api/mysqlController/getcaches'
 
 // 获取复制信息的url
-export const replicationsUrl = '/static/api/getReplications.json'
+export const replicationsUrl = debug ? '/static/api/getReplications.json' : '/api/mysqlController/getReplications'
 // export const replicationsUrl = '/api/mysqlController/getReplications'
 
 // 轮询间隔 5000ms
