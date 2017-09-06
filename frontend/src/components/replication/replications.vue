@@ -41,6 +41,12 @@
                         layout: 'none',
                         coordinateSystem: 'cartesian2d',
                         symbolSize: 40,
+                        label: {
+                            normal: {
+                                show: true,
+                                color: '#000'
+                            }
+                        },
                         degeLabel: {
                             normal: {
                                 show: true,

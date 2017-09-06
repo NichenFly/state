@@ -41,6 +41,9 @@
         created() {
             this.chart = {}
         },
+        activated() {
+            this.chart.resize()
+        },
         mounted() {
             this.chart = Echarts.init(this.$refs.liquidfill)
             this.chart.setOption({
