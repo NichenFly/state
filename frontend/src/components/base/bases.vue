@@ -1,31 +1,51 @@
 <template>
     <div>
         <!-- <base-card :baseList="baseData"></base-card> -->
-        <liquidfill-chart :option="baseOption" @liquidfill-click="liquidClick" v-for="(baseOption, index) in baseOptions" :key="index"></liquidfill-chart>
-        <Spin size="large" fix v-if="baseOptions.length === 0"></Spin>
+        <liquidfill-chart 
+            :option="baseOption" 
+            @liquidfill-click="liquidClick" 
+            v-for="(baseOption, index) in baseOptions" 
+            :key="index"></liquidfill-chart>
+        <Loading v-if="baseOptions.length === 0"></Loading>
         <Modal
             v-model="modalShow"
-            title="somethings show"
-            :mask-closable="false"
-            width="80">
-            <p>自定义宽度，单位 px，默认 520px。</p>
-            <p>对话框的宽度是响应式的，当屏幕尺寸小于 768px 时，宽度会变为自动<code>auto</code>。</p>
+            :title="modalTitle"
+            :styles="{top: '20px'}"
+            width="70">
+            <p class="input-area">
+                <Input v-model.trim="filterText" placeholder="输入筛选内容"></Input>
+            </p>
+            <p>
+                <Table :columns="hostBaseInfo.columns" 
+                       :data="hostBaseData" 
+                       :show-header="false"
+                       v-if="!loadingState && hostBaseInfo.columns.length !== 0"></Table>
+                <Loading v-if="loadingState"></Loading>
+            </p>
         </Modal>
     </div>
 </template>
 <script>
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { basePath } from 'constants/constants'
+    import { basePath, CODE_OK } from 'constants/constants'
     import LiquidfillChart from 'base/echarts/liquidfill-base-chart'
+    import { getBasesByHost } from 'api/base'
+    import { expand } from 'common/js/expand'
+    import BaseExpand from '@/components/base/base-item-expand'
+    import Loading from 'base/loading/loading'
 
-    /*
-    每个波浪有自己的运动频率,计算方式是:虚拟时间/增长数的垂直坐标系,本次的数据在增长时的倾角越大,速度越快
-    */
     export default {
         data() {
             return {
-                modalShow: false
+                modalShow: false,
+                loadingState: false,
+                modalTitle: '',
+                filterText: '',
+                hostBaseInfo: {
+                    columns: [],
+                    data: []
+                }
             }
         },
         computed: {
@@ -77,6 +97,20 @@
                     }
                 })
             },
+            hostBaseData() {
+                let data = []
+                let filterText = this.filterText
+                if (filterText) {
+                    this.hostBaseInfo.data.forEach((item) => {
+                        if (~item.category.toLowerCase().indexOf(filterText.toLowerCase())) {
+                            data.push(item)
+                        }
+                    })
+                } else {
+                    data = this.hostBaseInfo.data
+                }
+                return data
+            },
             ...mapGetters([
                 'baseData',
                 'menuDesc'
@@ -89,15 +123,27 @@
         },
         methods: {
             liquidClick(text) {
-                console.log(text)
+                this.modalTitle = `${text}的基本信息`
+                this.filterText = ''
+                this.loadingState = true
                 this.modalShow = true
+                getBasesByHost(text).then((res) => {
+                    if (res.code === CODE_OK) {
+                        let data = res.data
+                        this.hostBaseInfo.data = data.data
+                        data.columns.unshift(expand(BaseExpand))
+                        this.hostBaseInfo.columns = data.columns
+                        this.loadingState = false
+                    }
+                })
             },
             ...mapMutations({
                 setTitle: types.SET_TITLE
             })
         },
         components: {
-            LiquidfillChart
+            LiquidfillChart,
+            Loading
         }
     }
 </script>
@@ -110,5 +156,8 @@
     .ivu-card {
         margin: 10px;
         height: 300px;
+    }
+    .input-area {
+        margin-bottom: 10px;
     }
 </style>

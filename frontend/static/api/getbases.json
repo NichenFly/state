@@ -1,1 +1,51 @@
-{"code":200,"msg":"成功","data":[{"title":"10.18.13.34","data":[{"category":"Opens","status":"16659"},{"category":"Threads","status":"52"},{"category":"Uptime","status":"10 days 3 hours 43 min 11 sec"},{"category":"Questions","status":"72571450"},{"category":"Queries per second avg","status":"82.712"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"2000"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.13.35","data":[{"category":"Opens","status":"628"},{"category":"Threads","status":"34"},{"category":"Uptime","status":"8 days 7 hours 33 min 15 sec"},{"category":"Questions","status":"4504292"},{"category":"Queries per second avg","status":"6.269"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"560"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.13.7","data":[{"category":"Opens","status":"736"},{"category":"Threads","status":"43"},{"category":"Uptime","status":"9 days 4 hours 6 min 13 sec"},{"category":"Questions","status":"2345781"},{"category":"Queries per second avg","status":"2.960"},{"category":"Slow queries","status":"75010"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"675"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.13.8","data":[{"category":"Opens","status":"4791"},{"category":"Threads","status":"43"},{"category":"Uptime","status":"10 days 4 hours 55 min 0 sec"},{"category":"Questions","status":"24334956"},{"category":"Queries per second avg","status":"27.600"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"1531"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.13.70","data":[{"category":"Opens","status":"803"},{"category":"Threads","status":"34"},{"category":"Uptime","status":"10 days 3 hours 38 min 35 sec"},{"category":"Questions","status":"12909352"},{"category":"Queries per second avg","status":"14.717"},{"category":"Slow queries","status":"39004"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"751"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.13.71","data":[{"category":"Opens","status":"474"},{"category":"Threads","status":"9"},{"category":"Uptime","status":"10 days 3 hours 10 min 27 sec"},{"category":"Questions","status":"4781196"},{"category":"Queries per second avg","status":"5.461"},{"category":"Slow queries","status":"2656"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"394"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.15.7","data":[{"category":"Opens","status":"420"},{"category":"Threads","status":"6"},{"category":"Uptime","status":"5 hours 42 min 44 sec"},{"category":"Questions","status":"124818"},{"category":"Queries per second avg","status":"6.069"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"413"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.15.8","data":[{"category":"Opens","status":"118"},{"category":"Threads","status":"6"},{"category":"Uptime","status":"5 hours 40 min 43 sec"},{"category":"Questions","status":"206"},{"category":"Queries per second avg","status":"0.010"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"111"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.15.38","data":[{"category":"Opens","status":"298"},{"category":"Threads","status":"4"},{"category":"Uptime","status":"7 hours 44 min 2 sec"},{"category":"Questions","status":"95047"},{"category":"Queries per second avg","status":"3.413"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"291"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]},{"title":"10.18.15.100","data":[{"category":"Opens","status":"211"},{"category":"Threads","status":"4"},{"category":"Uptime","status":"5 hours 26 min 57 sec"},{"category":"Questions","status":"12289"},{"category":"Queries per second avg","status":"0.626"},{"category":"Slow queries","status":"0"},{"category":"Flush tables","status":"1"},{"category":"Open tables","status":"204"}],"columns":[{"title":"类别","width":170,"key":"category"},{"title":"状态","key":"status"}]}]}
+{
+    "code": 200,
+    "msg": "成功",
+    "data": {
+        "data": [
+            {
+                "category": "Opens",
+                "status": "16659"
+            },
+            {
+                "category": "Threads",
+                "status": "52"
+            },
+            {
+                "category": "Uptime",
+                "status": "10 days 3 hours 43 min 11 sec"
+            },
+            {
+                "category": "Questions",
+                "status": "72571450"
+            },
+            {
+                "category": "Queries per second avg",
+                "status": "82.712"
+            },
+            {
+                "category": "Slow queries",
+                "status": "0"
+            },
+            {
+                "category": "Flush tables",
+                "status": "1"
+            },
+            {
+                "category": "Open tables",
+                "status": "2000"
+            }
+        ],
+        "columns": [
+            {
+                "title": "变量",
+                "width": 170,
+                "key": "category"
+            },
+            {
+                "title": "值",
+                "key": "status"
+            }
+        ]
+    }
+}

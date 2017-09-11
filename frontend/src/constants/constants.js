@@ -11,6 +11,8 @@ export const menusUrl = debug ? '/static/api/menus.json' : '/api/menuController/
 export const basesUrl = debug ? '/static/api/bases.json' : '/api/mysqlController/getbases'
 // export const basesUrl = '/api/mysqlController/getbases'
 
+export const basesByHostUrl = debug ? '/static/api/getbases.json' : '/api/mysqlController/getBasesByHost'
+
 // 获取缓存数据的url
 export const cachesUrl = debug ? '/static/api/getcaches.json' : '/api/mysqlController/getcaches'
 // export const cachesUrl = '/api/mysqlController/getcaches'
