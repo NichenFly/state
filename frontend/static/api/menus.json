@@ -14,13 +14,6 @@
                     "desc": "显示数据库的基本状态"
                 },
                 {
-                    "name": "cache",
-                    "orderNum": 12,
-                    "display": "缓存状态",
-                    "path": "/caches",
-                    "desc": "显示数据库的缓存信息"
-                },
-                {
                     "name": "replication",
                     "orderNum": 13,
                     "display": "复制状态",

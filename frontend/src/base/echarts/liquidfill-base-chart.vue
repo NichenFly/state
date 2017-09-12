@@ -35,6 +35,7 @@
         },
         watch: {
             option() {
+                this.chart.setOption(this.option)
                 this.chart.resize()
             }
         },
@@ -51,7 +52,10 @@
                 media: this.media
             })
             this.chart.getZr().on('click', (event) => {
-                this.$emit('liquidfill-click', event.topTarget.style.text)
+                if (event.topTarget) {
+                    this.chart.resize()
+                    this.$emit('liquidfill-click', event.topTarget.style.text)
+                }
             })
         },
         components: {

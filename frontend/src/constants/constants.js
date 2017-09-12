@@ -13,10 +13,6 @@ export const basesUrl = debug ? '/static/api/bases.json' : '/api/mysqlController
 
 export const basesByHostUrl = debug ? '/static/api/getbases.json' : '/api/mysqlController/getBasesByHost'
 
-// 获取缓存数据的url
-export const cachesUrl = debug ? '/static/api/getcaches.json' : '/api/mysqlController/getcaches'
-// export const cachesUrl = '/api/mysqlController/getcaches'
-
 // 获取复制信息的url
 export const replicationsUrl = debug ? '/static/api/getReplications.json' : '/api/mysqlController/getReplications'
 // export const replicationsUrl = '/api/mysqlController/getReplications'
@@ -32,7 +28,6 @@ export const relayWarn = 10
 
 // 标题显示内容
 export const basePath = '/bases'
-export const cachePath = '/caches'
 export const replicationPath = '/replications'
 
 export const showExcepts = [

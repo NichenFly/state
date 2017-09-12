@@ -1,8 +1,13 @@
 <template>
-    <div class="chart" ref="graphLine"></div>
+    <div>
+        <div class="chart" ref="graphLine"></div>
+        <!-- <loading v-if=""></loading> -->
+    </div>
+    
 </template>
 <script>
     import Echarts from 'echarts'
+    import Loading from 'base/loading/loading'
     export default {
         props: {
             option: {
@@ -13,7 +18,7 @@
         },
         watch: {
             option() {
-                console('watch...')
+                this.chart.setOption(this.option)
                 this.chart.resize()
             }
         },
@@ -24,14 +29,17 @@
             this.chart = Echarts.init(this.$refs.graphLine)
             this.chart.setOption(this.option)
             this.chart.getZr().on('click', (event) => {
-                this.$emit('graph-line-click', event.topTarget.style.text)
+                if (event.topTarget) {
+                    this.$emit('graph-line-click', event.topTarget.style.text)
+                }
             })
         },
         activated() {
             this.chart.resize()
         },
         components: {
-            Echarts
+            Echarts,
+            Loading
         }
     }
 </script>

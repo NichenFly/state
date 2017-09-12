@@ -55,20 +55,36 @@
                     return {
                         series: [{
                             type: 'liquidFill',
-                            data: base.data,
-                            // waveAnimation: false,
+                            data: [
+                                {
+                                    'name': '1',
+                                    'value': 0.5,
+                                    'growth': 0.2
+                                },
+                                {
+                                    'name': '2',
+                                    'value': 0.35,
+                                    'growth': 0.25
+                                },
+                                {
+                                    'name': '3',
+                                    'value': 0.2,
+                                    'growth': 0.3
+                                }
+                            ],
+                            waveAnimation: !base.hasError,
                             radius: '90%',
                             amplitude: 25,
                             period: function (value, index) {
-                                return 2000 * base.data[index].growth + 1000
+                                return 2000 * value + 1000
                             },
                             outline: {
                                 show: false
                             },
                             backgroundStyle: {
-                                borderColor: '#156ACF',
+                                borderColor: base.hasError ? '#f00' : '#156ACF',
                                 borderWidth: 1,
-                                color: '#E3F7FF',
+                                color: base.hasError ? '#f90' : '#E3F7FF',
                                 shadowColor: 'rgba(0, 0, 0, 0.4)',
                                 shadowBlur: 20
                             },
@@ -86,14 +102,7 @@
                                     }
                                 }
                             }
-                        }],
-                        tooltip: {
-                            show: true,
-                            formatter: (params) => {
-                                // console.log(params.data)
-                                return `${params.data.name}`
-                            }
-                        }
+                        }]
                     }
                 })
             },
@@ -130,9 +139,9 @@
                 getBasesByHost(text).then((res) => {
                     if (res.code === CODE_OK) {
                         let data = res.data
-                        this.hostBaseInfo.data = data.data
                         data.columns.unshift(expand(BaseExpand))
                         this.hostBaseInfo.columns = data.columns
+                        this.hostBaseInfo.data = data.data
                         this.loadingState = false
                     }
                 })

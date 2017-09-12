@@ -17,12 +17,6 @@ const Bases = (resolve) => {
     })
 }
 
-const Caches = (resolve) => {
-    import('@/components/cache/caches').then((module) => {
-        resolve(module)
-    })
-}
-
 const Replications = (resolve) => {
     import('@/components/replication/replications').then((module) => {
         resolve(module)
@@ -45,11 +39,6 @@ export default new Router({
                 path: '/replications',
                 name: 'replications',
                 component: Replications
-            },
-            {
-                path: '/caches',
-                name: 'caches',
-                component: Caches
             }
         ]
     }]

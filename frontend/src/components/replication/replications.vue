@@ -13,7 +13,7 @@
     import ExpandRow from './replication-expand-row'
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { relayWarn, replicationPath } from 'constants/constants'
+    import { replicationPath } from 'constants/constants'
     import GraphLineChart from 'base/echarts/graph-line'
 
     export default {
@@ -214,23 +214,8 @@
             this.setTitle(this.menuDesc[replicationPath])
         },
         methods: {
-            rowClassName (row, index) {
-                if (row.hasError === 'yes') {
-                    return 'table-error-row'
-                }
-
-                if (row.relay > relayWarn) {
-                    return 'table-warn-row'
-                }
-                return ''
-            },
-            expand(data, status) {
-                let changedData = Object.assign({status: status}, data)
-                this.setExpand(changedData)
-            },
             ...mapMutations({
-                setTitle: types.SET_TITLE,
-                setExpand: types.SET_EXPAND_REPLICATION
+                setTitle: types.SET_TITLE
             })
         },
         components: {
