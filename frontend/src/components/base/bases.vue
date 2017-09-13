@@ -19,8 +19,8 @@
                 <Table :columns="hostBaseInfo.columns" 
                        :data="hostBaseData" 
                        :show-header="false"
-                       v-if="!loadingState && hostBaseInfo.columns.length !== 0"></Table>
-                <Loading v-if="loadingState"></Loading>
+                       v-if="hostBaseInfo.columns.length !== 0"></Table>
+                <Loading v-if="hostBaseInfo.columns.length === 0"></Loading>
             </p>
         </Modal>
     </div>
@@ -39,7 +39,6 @@
         data() {
             return {
                 modalShow: false,
-                loadingState: false,
                 modalTitle: '',
                 filterText: '',
                 hostBaseInfo: {
@@ -134,7 +133,6 @@
             liquidClick(text) {
                 this.modalTitle = `${text}的基本信息`
                 this.filterText = ''
-                this.loadingState = true
                 this.modalShow = true
                 getBasesByHost(text).then((res) => {
                     if (res.code === CODE_OK) {
@@ -142,7 +140,6 @@
                         data.columns.unshift(expand(BaseExpand))
                         this.hostBaseInfo.columns = data.columns
                         this.hostBaseInfo.data = data.data
-                        this.loadingState = false
                     }
                 })
             },
