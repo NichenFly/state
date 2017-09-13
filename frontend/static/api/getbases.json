@@ -5,35 +5,43 @@
         "data": [
             {
                 "category": "Opens",
-                "status": "16659"
+                "status": "16659",
+                "desc": "This is a desc"
             },
             {
                 "category": "Threads",
-                "status": "52"
+                "status": "52",
+                "desc": "This is a desc"
             },
             {
                 "category": "Uptime",
-                "status": "10 days 3 hours 43 min 11 sec"
+                "status": "10 days 3 hours 43 min 11 sec",
+                "desc": "This is a desc"
             },
             {
                 "category": "Questions",
-                "status": "72571450"
+                "status": "72571450",
+                "desc": "This is a desc"
             },
             {
                 "category": "Queries per second avg",
-                "status": "82.712"
+                "status": "82.712",
+                "desc": "This is a desc"
             },
             {
                 "category": "Slow queries",
-                "status": "0"
+                "status": "0",
+                "desc": "This is a desc"
             },
             {
                 "category": "Flush tables",
-                "status": "1"
+                "status": "1",
+                "desc": "This is a desc"
             },
             {
                 "category": "Open tables",
-                "status": "2000"
+                "status": "2000",
+                "desc": "This is a desc"
             }
         ],
         "columns": [
