@@ -5,7 +5,11 @@ export default {
         replication: 0
     },
     baseData: [],
-    replicationData: [],
+    replicationData: {
+        nodes: {},
+        masters: [],
+        groups: []
+    },
     menus: [],
     menuDesc: {}
 }

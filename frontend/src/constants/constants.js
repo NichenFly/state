@@ -14,17 +14,21 @@ export const basesUrl = debug ? '/static/api/bases.json' : '/api/mysqlController
 export const basesByHostUrl = debug ? '/static/api/getbases.json' : '/api/mysqlController/getBasesByHost'
 
 // 获取复制信息的url
-export const replicationsUrl = debug ? '/static/api/getReplications.json' : '/api/mysqlController/getReplications'
+export const replicationsUrl = debug ? '/static/api/replications.json' : '/api/mysqlController/getReplications'
 // export const replicationsUrl = '/api/mysqlController/getReplications'
 
 // 轮询间隔 5000ms
-export const intervalTime = 5000
+export const intervalTime = 500000
 
 // 展开单元格的默认宽度
 export const expandWidth = 50
 
 // 复制延迟的警告值
 export const relayWarn = 10
+
+export const STATE_YES_STRING = 'Yes'
+
+export const STATE_NO_STRING = 'No'
 
 // 标题显示内容
 export const basePath = '/bases'

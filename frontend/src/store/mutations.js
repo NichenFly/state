@@ -13,8 +13,14 @@ const mutations = {
     [types.SET_BASE_DATA](state, data) {
         state.baseData = data
     },
-    [types.SET_REPLICATION_DATA](state, data) {
-        state.replicationData = data
+    [types.SET_REPLICATION_NODES](state, data) {
+        state.replicationData.nodes = data
+    },
+    [types.SET_REPLICATION_MASTERS](state, data) {
+        state.replicationData.masters = data
+    },
+    [types.SET_REPLICATION_GROUPS](state, data) {
+        state.replicationData.groups = data
     },
     [types.SET_MENUS](state, data) {
         state.menus = data
