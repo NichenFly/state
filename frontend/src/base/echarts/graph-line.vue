@@ -146,7 +146,7 @@
                     masters.forEach((master, index) => {
                         nodes.push({
                             name: master,
-                            value: [(currentNum + index) * STEP_LENGTH + (maxHostNums + 1) / (masters.length + 1) * STEP_LENGTH, line * MAX_NUM],
+                            value: [(currentNum + index) * STEP_LENGTH + maxHostNums / masters.length * STEP_LENGTH, line * MAX_NUM],
                             itemStyle: data.nodes[master] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
@@ -154,7 +154,7 @@
                     slaves.forEach((slave, index) => {
                         nodes.push({
                             name: slave,
-                            value: [(currentNum + index) * STEP_LENGTH + (maxHostNums + 1) / (slaves.length + 1) * STEP_LENGTH, (line + 1) * MAX_NUM],
+                            value: [(currentNum + index) * STEP_LENGTH + maxHostNums / slaves.length * STEP_LENGTH, (line + 1) * MAX_NUM],
                             itemStyle: data.nodes[slave] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
