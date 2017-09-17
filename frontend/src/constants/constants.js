@@ -17,6 +17,8 @@ export const basesByHostUrl = debug ? '/static/api/getbases.json' : '/api/mysqlC
 export const replicationsUrl = debug ? '/static/api/replications.json' : '/api/mysqlController/getReplications'
 // export const replicationsUrl = '/api/mysqlController/getReplications'
 
+export const replicationByHostUrl = debug ? '/static/api/replication-items.json' : '/api/mysqlController/getReplicationByHost'
+
 // 轮询间隔 5000ms
 export const intervalTime = 5000
 
