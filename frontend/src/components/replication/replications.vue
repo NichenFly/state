@@ -75,9 +75,9 @@
                     this.modalTitle = text
                     this.filterText = ''
                     this.modalShow = true
-                    this.slaves = []
                     getReplicationByHost(text).then((res) => {
                         if (res.code === CODE_OK) {
+                            this.slaves = [] // 有其他地方依赖
                             let columns = [
                                 {
                                     title: '变量',
@@ -134,7 +134,6 @@
                                     hasError
                                 })
                             })
-                            console.log(this.slaves)
                         }
                     })
                 }
