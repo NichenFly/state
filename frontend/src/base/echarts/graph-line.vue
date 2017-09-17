@@ -8,7 +8,7 @@
 <script>
     import Echarts from 'echarts'
     import Loading from 'base/loading/loading'
-    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE } from 'constants/graph-const'
+    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE, COLORS } from 'constants/graph-const'
     import { STATE_YES_STRING } from 'constants/constants'
     export default {
         props: {
@@ -94,12 +94,12 @@
                             smooth: false,
                             trailLength: 0,
                             symbol: 'arrow',
-                            symbolSize: 12
+                            symbolSize: 10
                         },
                         lineStyle: {
                             normal: {
-                                color: 'lime',
-                                width: 2,
+                                color: '#f3c7a2',
+                                width: 1,
                                 opacity: 0.4
                             }
                         },
@@ -110,6 +110,7 @@
         },
         created() {
             this.nodeObjs = []
+            this.colorIndex = 0
             this.chart = {}
         },
         mounted() {
@@ -186,10 +187,15 @@
                 let masters = data.masters
                 masters.forEach((master) => {
                     let slaves = master.slaves
-                    slaves.forEach((slave) => {
+                    slaves.forEach((slave, index) => {
                         links.push({
                             source: master.name,
-                            target: slave.name
+                            target: slave.name,
+                            lineStyle: {
+                                normal: {
+                                    color: COLORS[index % COLORS.length]
+                                }
+                            }
                         })
                     })
                 })
@@ -205,7 +211,7 @@
                     nodeObjTmps[nodeObj.name] = nodeObj.value
                 })
                 let arrows = []
-                links.forEach((link) => {
+                links.forEach((link, index) => {
                     arrows.push([
                         {
                             coord: nodeObjTmps[link.source]
@@ -228,6 +234,6 @@
     .chart {
         display: inline-flex;
         width: 100%;
-        height: 300px;
+        height: 400px;
     }
 </style>
