@@ -8,7 +8,7 @@
 <script>
     import Echarts from 'echarts'
     import Loading from 'base/loading/loading'
-    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE, COLORS } from 'constants/graph-const'
+    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE, COLORS, LABEL_COLOR } from 'constants/graph-const'
     import { STATE_YES_STRING } from 'constants/constants'
     export default {
         props: {
@@ -72,7 +72,7 @@
                         label: {
                             normal: {
                                 show: true,
-                                color: '#000'
+                                color: LABEL_COLOR
                             }
                         },
                         degeLabel: {
@@ -82,7 +82,7 @@
                             }
                         },
                         edgeSymbol: ['circle', 'arrow'],
-                        edgeSymbolSize: [4, 10],
+                        edgeSymbolSize: [0, 10],
                         data: this.nodes,
                         links: this.links
                     }, {
@@ -94,11 +94,11 @@
                             smooth: false,
                             trailLength: 0,
                             symbol: 'arrow',
-                            symbolSize: 10
+                            symbolSize: 6
                         },
                         lineStyle: {
                             normal: {
-                                color: '#f3c7a2',
+                                color: '#aaa',
                                 width: 1,
                                 opacity: 0.4
                             }
