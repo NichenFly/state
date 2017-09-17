@@ -20,9 +20,6 @@
         },
         watch: {
             nodes() {
-                console.log('nodes', JSON.stringify(this.nodes))
-                console.log('links', JSON.stringify(this.links))
-                console.log('arrows', JSON.stringify(this.arrows))
                 this.chart.setOption(this.option)
                 this.chart.resize()
             },

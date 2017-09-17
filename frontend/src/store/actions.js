@@ -143,13 +143,8 @@ function _getReplicationData({commit, state}) {
             let data = res.data
 
             let nodes = _getNodes(data)
-
             let masters = _addMasters(data)
-
             let groups = _addGroups(masters)
-
-            console.log(masters)
-            console.log(groups)
 
             commit(types.SET_REPLICATION_NODES, nodes)
             commit(types.SET_REPLICATION_MASTERS, masters)

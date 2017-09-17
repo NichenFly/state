@@ -18,7 +18,7 @@ export const replicationsUrl = debug ? '/static/api/replications.json' : '/api/m
 // export const replicationsUrl = '/api/mysqlController/getReplications'
 
 // 轮询间隔 5000ms
-export const intervalTime = 500000
+export const intervalTime = 5000
 
 // 展开单元格的默认宽度
 export const expandWidth = 50
