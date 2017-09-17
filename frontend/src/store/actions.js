@@ -21,6 +21,9 @@ function _getReplicationWarns(data) {
 function _getBaseData({commit, state}) {
     getBases().then((res) => {
         if (res.code === CODE_OK) {
+            if (JSON.stringify(state.baseData) === JSON.stringify(res.data)) {
+                return
+            }
             commit(types.SET_BASE_DATA, res.data)
         }
     })
@@ -143,6 +146,11 @@ function _getReplicationData({commit, state}) {
             let data = res.data
 
             let nodes = _getNodes(data)
+
+            if (JSON.stringify(state.replicationData.nodes) === JSON.stringify(nodes)) {
+                return
+            }
+
             let masters = _addMasters(data)
             let groups = _addGroups(masters)
 
