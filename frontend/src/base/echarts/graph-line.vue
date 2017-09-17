@@ -8,7 +8,7 @@
 <script>
     import Echarts from 'echarts'
     import Loading from 'base/loading/loading'
-    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR } from 'constants/graph-const'
+    import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE } from 'constants/graph-const'
     import { STATE_YES_STRING } from 'constants/constants'
     export default {
         props: {
@@ -68,7 +68,7 @@
                         type: 'graph',
                         layout: 'none',
                         coordinateSystem: 'cartesian2d',
-                        symbolSize: 80,
+                        symbolSize: SYMBOL_SIZE,
                         label: {
                             normal: {
                                 show: true,
@@ -132,14 +132,14 @@
                     return []
                 }
                 let nodes = []
-                let line = 1
+                let line = 0
                 let currentNum = 0
                 data.groups.forEach((group) => {
                     let masters = group.masters
                     let slaves = group.slaves
                     let maxHostNums = masters.length > slaves.length ? masters.length : slaves.length
                     if (currentNum + maxHostNums > MAX_NUM) {
-                        line += 2
+                        line++
                         currentNum = 1
                     }
 
@@ -228,6 +228,6 @@
     .chart {
         display: inline-flex;
         width: 100%;
-        height: 600px;
+        height: 300px;
     }
 </style>
