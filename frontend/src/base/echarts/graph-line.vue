@@ -20,9 +20,9 @@
         },
         watch: {
             nodes() {
-                console.log('nodes', this.nodes)
-                console.log('links', this.links)
-                console.log('arrows', this.arrows)
+                console.log('nodes', JSON.stringify(this.nodes))
+                console.log('links', JSON.stringify(this.links))
+                console.log('arrows', JSON.stringify(this.arrows))
                 this.chart.setOption(this.option)
                 this.chart.resize()
             },
@@ -138,15 +138,15 @@
                     let masters = group.masters
                     let slaves = group.slaves
                     let maxHostNums = masters.length > slaves.length ? masters.length : slaves.length
-                    if (currentNum + maxHostNums >= MAX_NUM) {
-                        line++
+                    if (currentNum + maxHostNums > MAX_NUM) {
+                        line += 2
                         currentNum = 1
                     }
 
                     masters.forEach((master, index) => {
                         nodes.push({
                             name: master,
-                            value: [(currentNum + index) * STEP_LENGTH + maxHostNums / masters.length * STEP_LENGTH, line * MAX_NUM],
+                            value: [this._getXaxis(currentNum, masters.length, index, maxHostNums), line * MAX_NUM],
                             itemStyle: data.nodes[master] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
@@ -154,7 +154,7 @@
                     slaves.forEach((slave, index) => {
                         nodes.push({
                             name: slave,
-                            value: [(currentNum + index) * STEP_LENGTH + maxHostNums / slaves.length * STEP_LENGTH, (line + 1) * MAX_NUM],
+                            value: [this._getXaxis(currentNum, slaves.length, index, maxHostNums), (line + 1) * MAX_NUM],
                             itemStyle: data.nodes[slave] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
@@ -162,6 +162,21 @@
                 })
                 this.nodeObjs = nodes
                 return nodes
+            },
+
+            /**
+             * 获取x坐标
+             */
+            _getXaxis(currentNum, hostNums, index, maxHostNums) {
+                let x = 0
+                if (hostNums === maxHostNums) {
+                    x = currentNum * STEP_LENGTH + hostNums / maxHostNums * STEP_LENGTH * index
+                } else {
+                    let totalLength = STEP_LENGTH * (maxHostNums - 1)
+                    let stepLength = totalLength / (hostNums + 1)
+                    x = currentNum * stepLength + stepLength * (index + 1)
+                }
+                return x
             },
             _getLinks(data) {
                 if (!data) {
