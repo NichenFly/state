@@ -23,7 +23,7 @@ public class Remind {
 
 	static long lastSentMessageTime = System.currentTimeMillis();
 	static long lastSentMailTime = System.currentTimeMillis();
-	static String sendPeriod = Play.configuration.getProperty("sendPeriod", "1h");
+	static String sendPeriod = Play.configuration.getProperty("remind.sendPeriod", "1h");
 
 	/**
 	 * 发送短信信息
