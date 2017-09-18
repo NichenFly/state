@@ -27,28 +27,34 @@ import play.mvc.*;
 import util.CommonUtil;
 import util.MySqlDBUtil;
 
+/**
+ * MySQL相关信息获取
+ * @author nichen
+ * date: 2017-09-18
+ */
 public class MySQLController extends Controller {
     
+	/**
+	 * 获取基本信息的接口
+	 */
     public static void getBases() {
-    	List<Map<String, String>> hosts = CommonUtil.getDBs();
+    	Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
     	Result result = new Result();
     	
     	List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
-    	
-    	for (Map<String, String> host : hosts) {
-			String mysqlHost = host.get("ip");
+    	Set<String> hosts = hostsMap.keySet();
+    	for (String host : hosts) {
 			Map<String, Object> infos = null;
+			
 	    	try {
-	    		infos = (Map<String, Object>) Cache.get(UpdateJob.BASES_KEY +"_" +mysqlHost);
+	    		infos = (Map<String, Object>) Cache.get(UpdateJob.BASES_KEY +"_" +host);
 	    	}catch (Exception e) {
-	    		Logger.error(e, "get bases from cache error", ""); 
+	    		Logger.error(e, "Get bases from cache error", ""); 
 	    	}
 	    	
-	    	if(infos == null){
-	    		infos = new HashMap<String, Object>();
-	    		infos.put("Error", "服务器连接断开");
+	    	if(infos != null){
+	    		infoList.add(infos);
 	    	}
-	    	infoList.add(infos);
     	}
     	
     	result.setCode(Result.OK);
@@ -57,86 +63,75 @@ public class MySQLController extends Controller {
     	renderJSON(result);
     }
     
-    public static void getCaches() {
-    	List<Map<String, String>> hosts = CommonUtil.getDBs();
+    /**
+     * 通过主机地址获取当前的状态信息
+     * @param host
+     */
+    public static void getBasesByHost(String host) {
+    	Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
     	Result result = new Result();
-    	
-    	List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
-    	
-    	for (Map<String, String> host : hosts) {
-			String mysqlHost = host.get("ip");
-			Map<String, Object> infos = null;
-	    	try {
-	    		infos = (Map<String, Object>) Cache.get(UpdateJob.CACHE_KEY +"_" +mysqlHost);
-	    	}catch (Exception e) {
-	    		Logger.error(e, "get caches from cache error", ""); 
-	    	}
-	    	
-	    	if(infos == null){
-	    		infos = new HashMap<String, Object>();
-	    		infos.put("Error", "服务器连接断开");
-	    	}
-	    	infoList.add(infos);
-    	}
+    	Map<String, String> hostMap = hostsMap.get(host);
+    	if (hostMap == null) {
+    		result.setCode(Result.ERROR);
+    		result.setMsg("目标主机不存在");
+    		renderJSON(result);
+    	} 
+    	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
+    	Map<String, String> infoMap = MySqlDBUtil.getBases(con);
     	
     	result.setCode(Result.OK);
-		result.setMsg(Result.OK_MSG);
-    	result.data = infoList;
+    	result.setMsg(Result.OK_MSG);
+    	result.setData(infoMap);
     	renderJSON(result);
     }
     
+    /**
+     * 获取复制基本状态的接口
+     */
     public static void getReplications() {
-    	
-    	List<Map<String, String>> hosts = CommonUtil.getDBs();
+    	Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
     	Result result = new Result();
     	
-    	Map<String, List> infos = new HashMap<String, List>();
-    	
-    	List<Map<String, String>> columnsList = new ArrayList<Map<String, String>>();
-    	Map<String, String> columnMap = new HashMap<String, String>();
-    	columnMap.put("title", "主机");
-    	columnMap.put("key", "host");
-    	columnsList.add(columnMap);
-    	
-    	columnMap = new HashMap<String, String>();
-    	columnMap.put("title", "主/从");
-    	columnMap.put("key", "masterSlave");
-    	columnsList.add(columnMap);
-    	
-    	columnMap = new HashMap<String, String>();
-    	columnMap.put("title", "状态");
-    	columnMap.put("key", "state");
-    	columnsList.add(columnMap);
-    	
-    	columnMap = new HashMap<String, String>();
-    	columnMap.put("title", "时延(s)");
-    	columnMap.put("key", "relay");
-    	columnsList.add(columnMap);
-    	
-    	infos.put("columns", columnsList);
-    	
-    	List<Map<String, String>> infoList = new ArrayList<Map<String, String>>();
-    	
-    	for (Map<String, String> host : hosts) {
-			String mysqlHost = host.get("ip");
-			Map<String, String> info = null;
+    	List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
+    	Set<String> hosts = hostsMap.keySet();
+    	for (String host : hosts) {
+			Map<String, Object> infos = null;
+			
 	    	try {
-	    		info = (Map<String, String>) Cache.get(UpdateJob.REPLICATION_KEY +"_" +mysqlHost);
+	    		infos = (Map<String, Object>) Cache.get(UpdateJob.REPLICATION_KEY +"_" +host);
 	    	}catch (Exception e) {
-	    		Logger.error(e, "get caches from cache error", ""); 
+	    		Logger.error(e, "Get replication status from cache error", ""); 
 	    	}
 	    	
-	    	if(infos == null){
-	    		info = new HashMap<String, String>();
-	    		info.put("Error", "服务器连接断开");
+	    	if(infos != null){
+	    		infoList.add(infos);
 	    	}
-	    	infoList.add(info);
     	}
     	
-    	infos.put("data", infoList);
     	result.setCode(Result.OK);
     	result.setMsg(Result.OK_MSG);
-    	result.data = infos;
+    	result.data = infoList;
+    	renderJSON(result);
+    }
+    
+    /**
+     * 通过主机地址获取当前复制信息
+     * @param host
+     */
+    public static void getReplicationsByHost(String host) {
+    	Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
+    	Result result = new Result();
+    	Map<String, String> hostMap = hostsMap.get(host);
+    	if (hostMap == null) {
+    		result.setCode(Result.ERROR);
+    		result.setMsg("目标主机不存在");
+    		renderJSON(result);
+    	} 
+    	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
+    	List<Map<String, Object>> infoMap = MySqlDBUtil.getReplications(con);
+    	result.setCode(Result.OK);
+    	result.setMsg(Result.OK_MSG);
+    	result.setData(infoMap);
     	renderJSON(result);
     }
 

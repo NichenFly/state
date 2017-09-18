@@ -54,62 +54,9 @@ public class MySqlDBUtil {
 	 * @param con
 	 * @return
 	 */
-	public static Map<String, String> getBases(String host, String port, String user, String passwd) {
-		String cmd = "mysql " + "-h" + host + " -u" + user + " -p" + passwd + " -e status";
+	public static Map<String, String> getBases(Connection con) {
 		Map<String, String> infoMap = new HashMap<String, String>();
-		try {
-			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
-			int statusCode = process.waitFor();
-			if (statusCode == 0) {
-				InputStream inputStream = process.getInputStream();
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-				String line = null;
-				while ((line = bufferedReader.readLine()) != null) {
-					if (line.startsWith("msyql") || line.startsWith("Uptime")) {
-						String[] spliteds = line.split(":");
-						infoMap.put(spliteds[0].trim(), spliteds[1].trim());
-					} else if (line.startsWith("Threads")) {
-						String[] categories = line.split("  ");
-						for (String s : categories) {
-							String[] spliteds = s.split(":");
-							infoMap.put(spliteds[0].trim(), spliteds[1].trim());
-						}
-					}
-				}
-				inputStream.close();
-				bufferedReader.close();
-			} else {
-				// 非正确退出,输出错误信息
-				
-				infoMap.put("state", "连接服务器出错");
-				
-				InputStream errorInputStream = process.getErrorStream();
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorInputStream));
-				String line = null;
-				while ((line = bufferedReader.readLine()) != null) {
-					Logger.error("%s", line);
-				}
-				errorInputStream.close();
-				bufferedReader.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		return infoMap;
-	}
-
-	/**
-	 * 获取数据库的缓存信息
-	 * 
-	 * @param con
-	 * @return
-	 */
-	public static Map<String, String> getCaches(Connection con) {
-		Map<String, String> infoMap = new HashMap<String, String>();
-		String sql = "show variables like '%cache%'";
+		String sql = "show status";
 		try {
 			PreparedStatement prep = con.prepareStatement(sql);
 			ResultSet resultSet = prep.executeQuery();
@@ -128,45 +75,30 @@ public class MySqlDBUtil {
 	 * @param con
 	 * @return
 	 */
-	public static Map<String, String> getReplications(String host, String port, String user, String passwd) {
-		String cmd = "mysql " + "-h" + host + " -P" + port + " -u" + user + " -p" + passwd + " -e\"show slave status\\G\"";
-		Map<String, String> infoMap = new HashMap<String, String>();
+	public static List<Map<String, Object>> getReplications(Connection con) {
+		List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
+		String sql = "show slave status";
 		try {
-			Process process = Runtime.getRuntime().exec(cmd, null, Play.applicationPath);
-			int statusCode = process.waitFor();
-			if (statusCode == 0) {
-				InputStream inputStream = process.getInputStream();
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-				String line = null;
-				while ((line = bufferedReader.readLine()) != null) {
-					String[] spliteds = line.split(":");
-					if(spliteds.length == 2){
-						infoMap.put(spliteds[0].trim(), spliteds[1].trim());
-					}
-					
+			PreparedStatement prep = con.prepareStatement(sql);
+			ResultSet resultSet = prep.executeQuery();
+			ResultSetMetaData metaData = resultSet.getMetaData();
+			int columnCount = metaData.getColumnCount();
+			while (resultSet.next()) {
+				Map<String, Object> infoMap = new HashMap<String, Object>();
+				for (int i = 1; i <= columnCount; i++) {
+					String columnName = metaData.getColumnName(i);
+					infoMap.put(columnName, resultSet.getString(columnName));
 				}
-				inputStream.close();
-				bufferedReader.close();
-			} else {
-				// 非正确退出,输出错误信息
-				
-				infoMap.put("state", "连接服务器出错");
-				
-				InputStream errorInputStream = process.getErrorStream();
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorInputStream));
-				String line = null;
-				while ((line = bufferedReader.readLine()) != null) {
-					Logger.error("%s", line);
+				String ioRunning = infoMap.get("Slave_IO_Running").toString();
+				String sqlRunning = infoMap.get("Slave_SQL_Running").toString();
+				if ("No".equals(ioRunning) || "No".equals(sqlRunning)) {
+					infoMap.put("hasError", true);
 				}
-				errorInputStream.close();
-				bufferedReader.close();
+				infoList.add(infoMap);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return infoMap;
+		return infoList;
 	}
 }

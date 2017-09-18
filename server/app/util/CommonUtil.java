@@ -23,9 +23,9 @@ public class CommonUtil {
 	/**
 	 * 获取数据库连接信息
 	 */
-	public static List<Map<String, String>> getDBs() {
+	public static Map<String, Map<String, String>> getDBs() {
 
-		List<Map<String, String>> hostList = new ArrayList<Map<String, String>>();
+		Map<String, Map<String, String>> hostsMap = new HashMap<String, Map<String, String>>();
 
 		Play.configuration.clear();
 		try {
@@ -57,9 +57,9 @@ public class CommonUtil {
 			hostInfo.put("port", port);
 			hostInfo.put("user", user);
 			hostInfo.put("passwd", passwd);
-			hostList.add(hostInfo);
+			hostsMap.put(ip, hostInfo);
 		}
-		return hostList;
+		return hostsMap;
 	}
 
 	public static List<Map<String, String>> getRedis() {
