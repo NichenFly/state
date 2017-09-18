@@ -24,6 +24,14 @@ function _getBaseData({commit, state}) {
             if (JSON.stringify(state.baseData) === JSON.stringify(res.data)) {
                 return
             }
+            let data = res.data
+            let errors = 0
+            data.forEach((item) => {
+                if (item.hasError) {
+                    errors++
+                }
+            })
+            commit(types.SET_WARNS_BASE, errors)
             commit(types.SET_BASE_DATA, res.data)
         }
     })
