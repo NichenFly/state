@@ -5,14 +5,14 @@
 # Home page
 GET     /                                       staticFile:public/index.html
 GET		/bases									staticFile:public/index.html
-GET		/caches									staticFile:public/index.html
 GET		/replications							staticFile:public/index.html
 
 GET 	/api/getMenus							MenuController.getMenus
 
 GET		/api/mysql/getBases						MySQLController.getBases
-GET		/api/mysql/getCaches					MySQLController.getCaches
+GET		/api/mysql/getBasesByHost				MySQLController.getBasesByHost
 GET		/api/mysql/getReplications				MySQLController.getReplications
+GET		/api/mysql/getReplicationsByHost		MySQLController.getReplicationsByHost
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
 
+import jobs.ApplicationStartJob;
 import jobs.UpdateJob;
 import models.Result;
 import play.Logger;
@@ -75,13 +76,40 @@ public class MySQLController extends Controller {
     		result.setCode(Result.ERROR);
     		result.setMsg("目标主机不存在");
     		renderJSON(result);
-    	} 
+    	}
+    	
+    	List<Map<String, String>> infoList = new ArrayList<Map<String, String>>();
+    	List<Map<String, String>> columnList = new ArrayList<Map<String, String>>();
+    	
     	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
     	Map<String, String> infoMap = MySqlDBUtil.getBases(con);
+    	Map<String, String> descMap = (Map<String, String>) Cache.get(ApplicationStartJob.MYSQL_DESC_KEY);
+    	Set<String> keySet = infoMap.keySet();
+    	for (String key : keySet) {
+    		Map<String, String> info = new HashMap<String, String>();
+    		info.put("category", key);
+    		info.put("status", infoMap.get(key));
+    		info.put("desc",descMap.get(key));
+    		infoList.add(info);
+    	}
+    	
+    	Map<String, String> column = new HashMap<String, String>();
+    	column.put("title", "变量");
+    	column.put("key", "category");
+    	columnList.add(column);
+    	
+    	column = new HashMap<String, String>();
+    	column.put("title", "值");
+    	column.put("key", "status");
+    	columnList.add(column);
+    	
+    	Map<String, List<Map<String, String>>> data = new HashMap<String, List<Map<String, String>>>();
+    	data.put("data", infoList);
+    	data.put("columns", columnList);
     	
     	result.setCode(Result.OK);
     	result.setMsg(Result.OK_MSG);
-    	result.setData(infoMap);
+    	result.setData(data);
     	renderJSON(result);
     }
     

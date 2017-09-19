@@ -91,7 +91,9 @@ public class MySqlDBUtil {
 				}
 				String ioRunning = infoMap.get("Slave_IO_Running").toString();
 				String sqlRunning = infoMap.get("Slave_SQL_Running").toString();
-				if ("No".equals(ioRunning) || "No".equals(sqlRunning)) {
+				if ("Yes".equals(ioRunning) && "Yes".equals(sqlRunning)) {
+					infoMap.put("hasError", false);
+				} else {
 					infoMap.put("hasError", true);
 				}
 				infoList.add(infoMap);

@@ -1,5 +1,5 @@
 import * as types from './mutation-types.js'
-import { relayWarn, CODE_OK, STATE_YES_STRING } from 'constants/constants'
+import { relayWarn, CODE_OK } from 'constants/constants'
 import { getBases } from 'api/base'
 import { getReplications } from 'api/replication'
 // import { expand } from 'common/js/expand'
@@ -9,7 +9,7 @@ import { getMenus } from 'api/menu'
 function _getReplicationWarns(data) {
     let num = 0
     data.forEach((item) => {
-        if (item.hasError === STATE_YES_STRING) {
+        if (item.hasError) {
             num++
         } else if (item.relay > relayWarn) {
             num++

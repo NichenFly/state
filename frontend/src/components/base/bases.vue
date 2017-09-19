@@ -28,7 +28,7 @@
 <script>
     import { mapMutations, mapGetters } from 'vuex'
     import * as types from 'store/mutation-types'
-    import { basePath, CODE_OK } from 'constants/constants'
+    import { basePath, CODE_OK, baseExpandWidth } from 'constants/constants'
     import LiquidfillChart from 'base/echarts/liquidfill-base-chart'
     import { getBasesByHost } from 'api/base'
     import { expand } from 'common/js/expand'
@@ -139,6 +139,7 @@
                         let data = res.data
                         data.columns.unshift(expand(BaseExpand))
                         this.hostBaseInfo.columns = data.columns
+                        this.hostBaseInfo.columns[0].width = baseExpandWidth
                         this.hostBaseInfo.data = data.data
                     }
                 })

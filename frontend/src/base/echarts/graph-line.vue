@@ -9,7 +9,7 @@
     import Echarts from 'echarts'
     import Loading from 'base/loading/loading'
     import { MAX_NUM, STEP_LENGTH, ERROR_COLOR, SYMBOL_SIZE, COLORS, LABEL_COLOR } from 'constants/graph-const'
-    import { STATE_YES_STRING } from 'constants/constants'
+    import { STATE_HAS_ERROR } from 'constants/constants'
     export default {
         props: {
             nodeData: {
@@ -145,7 +145,7 @@
                         nodes.push({
                             name: master,
                             value: [this._getXaxis(currentNum, masters.length, index, maxHostNums), line * MAX_NUM],
-                            itemStyle: data.nodes[master] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
+                            itemStyle: data.nodes[master] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
 
@@ -153,7 +153,7 @@
                         nodes.push({
                             name: slave,
                             value: [this._getXaxis(currentNum, slaves.length, index, maxHostNums), (line + 1) * MAX_NUM],
-                            itemStyle: data.nodes[slave] === STATE_YES_STRING ? { normal: { color: ERROR_COLOR } } : undefined
+                            itemStyle: data.nodes[slave] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
                         })
                     })
                     currentNum += maxHostNums

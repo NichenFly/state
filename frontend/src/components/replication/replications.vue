@@ -94,7 +94,7 @@
                                 let data = []
                                 let label = ''
                                 let labelTitle = ''
-                                let hasError = 'No'
+                                let hasError = false
                                 for (let key in item) {
                                     if (key === 'host') {
                                         labelTitle = item[key]
@@ -109,7 +109,7 @@
                                         value: item[key]
                                     })
                                 }
-                                if (hasError === 'Yes') {
+                                if (hasError) {
                                     label = (h) => {
                                         return h('div', [
                                             h('Badge', {

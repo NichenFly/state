@@ -47,7 +47,6 @@
         "columns": [
             {
                 "title": "变量",
-                "width": 170,
                 "key": "category"
             },
             {

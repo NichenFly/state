@@ -4,21 +4,21 @@
     "data": [
         {
             "name": "10.18.13.34",
-            "hasError": "Yes",
+            "hasError": true,
             "masters": [
                 "10.18.13.35"
             ]
         },
         {
             "name": "10.18.13.35",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34"
             ]
         },
         {
             "name": "10.18.13.6",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -26,7 +26,7 @@
         },
         {
             "name": "10.18.13.7",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -34,7 +34,7 @@
         },
         {
             "name": "10.18.13.8",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -42,7 +42,7 @@
         },
         {
             "name": "10.18.13.9",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -50,7 +50,7 @@
         },
         {
             "name": "10.18.13.10",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -58,7 +58,7 @@
         },
         {
             "name": "10.18.13.11",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -66,7 +66,7 @@
         },
         {
             "name": "10.18.13.12",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -74,7 +74,7 @@
         },
         {
             "name": "192.168.130.140",
-            "hasError": "Yes",
+            "hasError": true,
             "masters": [
                 "10.18.13.34",
                 "10.18.13.35"
@@ -82,7 +82,7 @@
         },
         {
             "name": "10.18.13.38",
-            "hasError": "No",
+            "hasError": false,
             "masters": [
                 "10.18.13.37"
             ]
