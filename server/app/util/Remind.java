@@ -83,7 +83,7 @@ public class Remind {
 			}
 			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("mn")));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSent >= period) {
+			if (currentTime - lastSent >= period * 60 * 1000) {
 				return true;
 			}
 			return false;
@@ -94,7 +94,7 @@ public class Remind {
 			}
 			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("h")));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSent >= period) {
+			if (currentTime - lastSent >= period * 60 * 60 * 1000) {
 				return true;
 			}
 		} else if (sendPeriod.contains("d") && sendPeriod.length() > 2) {
@@ -104,7 +104,7 @@ public class Remind {
 			}
 			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("d")));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSent >= period) {
+			if (currentTime - lastSent >= period * 24 * 60 * 60 * 1000) {
 				return true;
 			}
 		} else {
