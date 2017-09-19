@@ -26,14 +26,6 @@ public class MenuController extends Controller {
     	subMenus.add(subMenu);
     	
     	subMenu = new SubMenu();
-    	subMenu.name = "cache";
-    	subMenu.orderNum = 12;
-    	subMenu.display = "缓存状态";
-    	subMenu.path = "/caches";
-    	subMenu.desc = "显示数据库的缓存信息";
-    	subMenus.add(subMenu);
-    	
-    	subMenu = new SubMenu();
     	subMenu.name = "replication";
     	subMenu.orderNum = 13;
     	subMenu.display = "复制状态";

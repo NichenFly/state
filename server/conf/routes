@@ -15,7 +15,7 @@ GET		/api/mysql/getReplications				MySQLController.getReplications
 GET		/api/mysql/getReplicationsByHost		MySQLController.getReplicationsByHost
 
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET     /favicon.ico                            staticFile:public/static/img/logo.gif
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

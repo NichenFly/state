@@ -19,6 +19,7 @@
                 <Table :columns="hostBaseInfo.columns" 
                        :data="hostBaseData" 
                        :show-header="false"
+                       height="400"
                        v-if="hostBaseInfo.columns.length !== 0"></Table>
                 <Loading v-if="hostBaseInfo.columns.length === 0"></Loading>
             </p>

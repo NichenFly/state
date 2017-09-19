@@ -27,7 +27,7 @@ public class ApplicationStartJob extends Job{
 				String line = scanner.nextLine();
 				int index = line.indexOf(":");
 				String key = line.substring(0, index);
-				String value = line.substring(index + 1, line.length() - 1);
+				String value = line.substring(index + 1, line.length());
 				if (key == null || key.trim().equals("") || value == null || value.trim().equals("")) {
 					continue;
 				}
