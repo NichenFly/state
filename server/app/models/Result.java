@@ -4,9 +4,11 @@ public class Result {
 	
 	public static final int OK = 200;
 	public static final int ERROR = 500;
+	public static final int NOT_FOUND = 400;
 	
 	public static final String OK_MSG = "成功";
 	public static final String ERR_MSG = "失败";
+	public static final String NOT_FOUND_MSG = "目标主机不在监控配置中";
 	
 	public int code;
 	public String msg;

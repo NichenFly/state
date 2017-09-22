@@ -20,7 +20,7 @@ import util.CommonUtil;
 import util.MySqlDBUtil;
 
 @OnApplicationStart
-@Every("10s")
+@Every("60s")
 public class UpdateJob extends Job {
 
 	public static final String BASES_KEY = "bases";
@@ -34,25 +34,38 @@ public class UpdateJob extends Job {
 		Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
 		Set<String> hosts = hostsMap.keySet();
 		for (String host : hosts) {
+			Connection con = null;
 			try {
 				Map<String, String> hostMap = hostsMap.get(host);
 				String mysqlHost = hostMap.get("ip");
 				String port = hostMap.get("port");
 				String user = hostMap.get("user");
 				String passwd = hostMap.get("passwd");
-				Connection con = MySqlDBUtil.getMysqlConnection(mysqlHost, port, user, passwd);
-
-				Logger.info("Get %s's Bases info ...", mysqlHost);
-				Map<String, String> basesMap = MySqlDBUtil.getBases(con);
-				Cache.set(BASES_KEY + "_" + mysqlHost, resolveBasesData(mysqlHost, basesMap));
-
-				Logger.info("Get %s's Replications info ...", mysqlHost);
-				List<Map<String, Object>> replicationMap = MySqlDBUtil.getReplications(con);
-				Cache.set(REPLICATION_KEY + "_" + mysqlHost, resolveReplicationsData(mysqlHost, replicationMap), "1mn");
+				con = MySqlDBUtil.getMysqlConnection(mysqlHost, port, user, passwd);
 				
-				con.close();
-			} catch (SQLException e) {
+				Map<String, String> basesMap = null;
+				if (con != null) {
+					Logger.info("Get %s's Bases info ...", mysqlHost);
+					basesMap = MySqlDBUtil.getBases(con);
+
+					Logger.info("Get %s's Replications info ...", mysqlHost);
+					List<Map<String, Object>> replicationMap = MySqlDBUtil.getReplications(con, "slave");
+					Cache.set(REPLICATION_KEY + "_" + mysqlHost, resolveReplicationsData(mysqlHost, replicationMap), "1mn");
+				}
+				
+				Cache.set(BASES_KEY + "_" + mysqlHost, resolveBasesData(mysqlHost, basesMap));
+				
+				
+			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				if (con != null) {
+					try {
+						con.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 
@@ -66,12 +79,8 @@ public class UpdateJob extends Job {
 	 */
 	private Map<String, Object> resolveBasesData(String host, Map<String, String> basesMap) {
 		Map<String, Object> data = new HashMap<String, Object>();
-		if(host == null || host.trim().equals("")){
-			return data;
-		}
-		
 		data.put("title", host);
-		if (basesMap.keySet().isEmpty()) {
+		if(host == null || host.trim().equals("") || basesMap == null || basesMap.keySet().isEmpty()){
 			data.put("hasError", true);
 		} else {
 			data.put("hasError", false);
