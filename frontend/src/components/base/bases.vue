@@ -11,6 +11,8 @@
             v-model="modalShow"
             :title="modalTitle"
             :styles="{top: '20px'}"
+            @on-ok="hideModal"
+            @on-cancel="hideModal"
             width="70">
             <p class="input-area">
                 <Input v-model.trim="filterText" placeholder="输入筛选内容"></Input>
@@ -131,6 +133,10 @@
             })
         },
         methods: {
+            hideModal() {
+                this.hostBaseInfo.columns = []
+                this.hostBaseInfo.data = []
+            },
             liquidClick(text) {
                 this.modalTitle = `${text}的基本信息`
                 this.filterText = ''

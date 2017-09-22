@@ -5,6 +5,8 @@
             v-model="modalShow"
             :title="modalTitle"
             :styles="{top: '20px'}"
+            @on-ok="hideModal"
+            @on-cancel="hideModal"
             width="70">
             <p class="input-area">
                 <Input v-model.trim="filterText" placeholder="输入筛选内容"></Input>
@@ -70,6 +72,9 @@
             this.setTitle(this.menuDesc[replicationPath])
         },
         methods: {
+            hideModal() {
+                this.slaves = []
+            },
             graphClick(text) {
                 if (text) {
                     this.modalTitle = text
