@@ -75,9 +75,12 @@ public class MySqlDBUtil {
 	 * @param con
 	 * @return
 	 */
-	public static List<Map<String, Object>> getReplications(Connection con) {
+	public static List<Map<String, Object>> getReplications(Connection con, String type) {
 		List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
-		String sql = "show slave status";
+		String slaveSql = "show slave status";
+		String masterSql = "show master status";
+		boolean isSlaveTask = "slave".equals(type);
+		String sql = isSlaveTask ? slaveSql : masterSql;
 		try {
 			PreparedStatement prep = con.prepareStatement(sql);
 			ResultSet resultSet = prep.executeQuery();
@@ -89,13 +92,19 @@ public class MySqlDBUtil {
 					String columnName = metaData.getColumnName(i);
 					infoMap.put(columnName, resultSet.getString(columnName));
 				}
-				String ioRunning = infoMap.get("Slave_IO_Running").toString();
-				String sqlRunning = infoMap.get("Slave_SQL_Running").toString();
-				if ("Yes".equals(ioRunning) && "Yes".equals(sqlRunning)) {
-					infoMap.put("hasError", false);
+				if (isSlaveTask) {
+					infoMap.put("host", "Master:" + infoMap.get("Master_Host"));
+					String ioRunning = infoMap.get("Slave_IO_Running").toString();
+					String sqlRunning = infoMap.get("Slave_SQL_Running").toString();
+					if ("Yes".equals(ioRunning) && "Yes".equals(sqlRunning)) {
+						infoMap.put("hasError", false);
+					} else {
+						infoMap.put("hasError", true);
+					}
 				} else {
-					infoMap.put("hasError", true);
+					infoMap.put("host", "Self");
 				}
+				
 				infoList.add(infoMap);
 			}
 		} catch (Exception e) {

@@ -82,15 +82,24 @@ public class MySQLController extends Controller {
     	List<Map<String, String>> columnList = new ArrayList<Map<String, String>>();
     	
     	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
-    	Map<String, String> infoMap = MySqlDBUtil.getBases(con);
-    	Map<String, String> descMap = (Map<String, String>) Cache.get(ApplicationStartJob.MYSQL_DESC_KEY);
-    	Set<String> keySet = infoMap.keySet();
-    	for (String key : keySet) {
+    	
+    	if (con == null) {
     		Map<String, String> info = new HashMap<String, String>();
-    		info.put("category", key);
-    		info.put("status", infoMap.get(key));
-    		info.put("desc",descMap.get(key));
+    		info.put("category", "State");
+    		info.put("status", "无法连接到数据库");
+    		info.put("desc", "在连接到数据库时出现问题, 请检查数据库主机, 用户名, 密码, 端口号是否配置正确,目标机器是否授予本监控程序远程访问权限");
     		infoList.add(info);
+    	} else {
+    		Map<String, String> infoMap = MySqlDBUtil.getBases(con);
+        	Map<String, String> descMap = (Map<String, String>) Cache.get(ApplicationStartJob.MYSQL_DESC_KEY);
+        	Set<String> keySet = infoMap.keySet();
+        	for (String key : keySet) {
+        		Map<String, String> info = new HashMap<String, String>();
+        		info.put("category", key);
+        		info.put("status", infoMap.get(key));
+        		info.put("desc",descMap.get(key));
+        		infoList.add(info);
+        	}
     	}
     	
     	Map<String, String> column = new HashMap<String, String>();
@@ -155,8 +164,24 @@ public class MySQLController extends Controller {
     		result.setMsg("目标主机不存在");
     		renderJSON(result);
     	} 
+    	List<Map<String, Object>> infoMap = new ArrayList<Map<String, Object>>();
     	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
-    	List<Map<String, Object>> infoMap = MySqlDBUtil.getReplications(con);
+    	if (con == null) {
+    		List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
+    		Map<String, Object> info = new HashMap<String, Object>();
+    		info.put("host", "Self");
+    		info.put("hasError", true);
+    		info.put("state", "无法连接到数据库");
+    		infoList.add(info);
+    		infoMap.addAll(infoList);
+    	} else {
+    		List<Map<String, Object>> masterInfoMap = MySqlDBUtil.getReplications(con, "master");
+        	List<Map<String, Object>> slaveInfoMap = MySqlDBUtil.getReplications(con, "slave");
+        	
+        	infoMap.addAll(masterInfoMap);
+        	infoMap.addAll(slaveInfoMap);
+    	}
+    	
     	result.setCode(Result.OK);
     	result.setMsg(Result.OK_MSG);
     	result.setData(infoMap);
