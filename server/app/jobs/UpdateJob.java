@@ -54,8 +54,6 @@ public class UpdateJob extends Job {
 				}
 				
 				Cache.set(BASES_KEY + "_" + mysqlHost, resolveBasesData(mysqlHost, basesMap));
-				
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -103,6 +101,9 @@ public class UpdateJob extends Job {
 		List<String> masters = new ArrayList<String>();
 		for (Map<String, Object> replication : replicationsMap) {
 			masters.add(replication.get("Master_Host").toString());
+			if ((boolean) replication.get("hasError")) {
+				hasError = true;
+			}
 		}
 		
 		data.put("name", host);
