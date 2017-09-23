@@ -15,7 +15,7 @@
                             <Input type="text" v-model="formCustom.username" placeholder="请输入用户名"></Input>
                         </FormItem>
                         <FormItem label="密码" prop="passwordCheck">
-                            <Input type="password" v-model="formCustom.password" placeholder="请输入密码"></Input>
+                            <Input type="password" v-model="formCustom.password"  @keyup.enter="handleReset('formCustom')" placeholder="请输入密码"></Input>
                         </FormItem>
                         <FormItem>
                             <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
@@ -31,6 +31,8 @@
     import { login } from 'api/login'
     import { CODE_OK } from 'constants/constants'
     import { getOriginUrl } from 'common/js/utils'
+
+    const loginNoticeName = 'login'
 
     export default {
         data () {
@@ -80,12 +82,20 @@
                 this.$refs[name].validate((valid) => {
                     login(this.formCustom).then((res) => {
                         if (res.code === CODE_OK) {
+                            this.$Notice.close(loginNoticeName)
                             let url = getOriginUrl()
                             if (url) {
-                                this.$router.push(url)
+                                this.$router.push({path: url})
                             } else {
                                 this.$router.push({name: 'bases'})
                             }
+                        } else {
+                            this.$Notice.error({
+                                title: '信息提示',
+                                name: loginNoticeName,
+                                desc: res.msg,
+                                duration: 3
+                            })
                         }
                     })
                 })

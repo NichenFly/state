@@ -20,7 +20,7 @@ import util.CommonUtil;
 import util.MySqlDBUtil;
 
 @OnApplicationStart
-//@Every("60s")
+@Every("10s")
 public class UpdateJob extends Job {
 
 	public static final String BASES_KEY = "bases";

@@ -5,6 +5,7 @@
 # Home page
 GET     /                                       Application.index
 GET     /login                                  staticFile:public/index.html
+GET		/logout									Secure.logout
 GET		/bases									Application.index
 GET		/replications							Application.index
 
