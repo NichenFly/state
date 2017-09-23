@@ -48,10 +48,7 @@ const router = new Router({
             {
                 path: '/replications',
                 name: 'replications',
-                component: Replications,
-                meta: {
-                    requireAuth: true
-                }
+                component: Replications
             }
         ]
     }]

@@ -38,6 +38,7 @@
         },
         computed: {
             nodes() {
+                console.log(this._getNodes(this.nodeData))
                 return this._getNodes(this.nodeData)
             },
             links() {
@@ -132,6 +133,7 @@
                 let nodes = []
                 let line = 0
                 let currentNum = 0
+                let pushedObjs = {}
                 data.groups.forEach((group) => {
                     let masters = group.masters
                     let slaves = group.slaves
@@ -142,19 +144,25 @@
                     }
 
                     masters.forEach((master, index) => {
-                        nodes.push({
-                            name: master,
-                            value: [this._getXaxis(currentNum, masters.length, index, maxHostNums), line * MAX_NUM],
-                            itemStyle: data.nodes[master] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
-                        })
+                        if (!pushedObjs[master]) {
+                            nodes.push({
+                                name: master,
+                                value: [this._getXaxis(currentNum, masters.length, index, maxHostNums), line * MAX_NUM],
+                                itemStyle: data.nodes[master] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
+                            })
+                            pushedObjs[master] = true
+                        }
                     })
 
                     slaves.forEach((slave, index) => {
-                        nodes.push({
-                            name: slave,
-                            value: [this._getXaxis(currentNum, slaves.length, index, maxHostNums), (line + 1) * MAX_NUM],
-                            itemStyle: data.nodes[slave] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
-                        })
+                        if (!pushedObjs[slave]) {
+                            nodes.push({
+                                name: slave,
+                                value: [this._getXaxis(currentNum, slaves.length, index, maxHostNums), (line + 1) * MAX_NUM],
+                                itemStyle: data.nodes[slave] === STATE_HAS_ERROR ? { normal: { color: ERROR_COLOR } } : undefined
+                            })
+                            pushedObjs[slave] = true
+                        }
                     })
                     currentNum += maxHostNums
                 })
