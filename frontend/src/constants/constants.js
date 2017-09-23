@@ -3,6 +3,8 @@ const debug = process.env.NODE_ENV !== 'production'
 // 请求的返回状态
 export const CODE_OK = 200
 
+export const loginUrl = '/Secure/authenticate'
+
 // 获取惨淡数据的url
 export const menusUrl = debug ? '/static/api/menus.json' : '/api/menuController/getMenus'
 

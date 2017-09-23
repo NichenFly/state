@@ -33,6 +33,7 @@ import util.MySqlDBUtil;
  * @author nichen
  * date: 2017-09-18
  */
+@With(Secure.Security.class)
 public class MySQLController extends Controller {
     
 	/**

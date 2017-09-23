@@ -16,7 +16,7 @@ import play.Play;
  * @author nichen date: 2017-08-27
  */
 public class CommonUtil {
-	static final String resourcesPath = Play.applicationPath + "/conf/resources/";
+	public static final String resourcesPath = Play.applicationPath + "/conf/resources/";
 	static final String mysqlConf = resourcesPath + "mysql.conf";
 	static final String redisConf = resourcesPath + "redis.conf";
 

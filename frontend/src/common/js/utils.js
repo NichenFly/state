@@ -14,3 +14,15 @@ export function resolveListTo2 (dataList) {
     })
     return list
 }
+
+export function getOriginUrl() {
+    let cookie = document.cookie
+    let sessions = cookie.split(';')
+    for (let i = 0; i < sessions.length; i++) {
+        let session = sessions[i]
+        if (session.startsWith('PLAY_FLASH=url=')) {
+            return session.replace('PLAY_FLASH=url=', '')
+        }
+    }
+    return ''
+}

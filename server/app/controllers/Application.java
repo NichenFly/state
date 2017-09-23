@@ -16,6 +16,7 @@ import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
+@With(Secure.class)
 public class Application extends Controller {
 	
 	/**

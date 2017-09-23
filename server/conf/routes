@@ -3,9 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                                       staticFile:public/index.html
-GET		/bases									staticFile:public/index.html
-GET		/replications							staticFile:public/index.html
+GET     /                                       Application.index
+GET     /login                                  staticFile:public/index.html
+GET		/bases									Application.index
+GET		/replications							Application.index
 
 GET 	/api/getMenus							MenuController.getMenus
 

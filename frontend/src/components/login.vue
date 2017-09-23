@@ -14,8 +14,8 @@
                         <FormItem label="用户名" prop="username">
                             <Input type="text" v-model="formCustom.username" placeholder="请输入用户名"></Input>
                         </FormItem>
-                        <FormItem label="密码" prop="passwdCheck">
-                            <Input type="password" v-model="formCustom.passwd" placeholder="请输入密码"></Input>
+                        <FormItem label="密码" prop="passwordCheck">
+                            <Input type="password" v-model="formCustom.password" placeholder="请输入密码"></Input>
                         </FormItem>
                         <FormItem>
                             <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
@@ -28,6 +28,10 @@
     </div>
 </template>
 <script>
+    import { login } from 'api/login'
+    import { CODE_OK } from 'constants/constants'
+    import { getOriginUrl } from 'common/js/utils'
+
     export default {
         data () {
             const validateUsername = (rule, value, callback) => {
@@ -49,7 +53,7 @@
                 //     }
                 // }, 1000)
             }
-            const validatePass = (rule, value, callback) => {
+            const validatePassword = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'))
                 } else {
@@ -59,14 +63,14 @@
             return {
                 formCustom: {
                     username: '',
-                    passwd: ''
+                    password: ''
                 },
                 ruleCustom: {
                     username: [
                         { validator: validateUsername, trigger: 'blur' }
                     ],
-                    passwd: [
-                        { validator: validatePass, trigger: 'blur' }
+                    password: [
+                        { validator: validatePassword, trigger: 'blur' }
                     ]
                 }
             }
@@ -74,11 +78,16 @@
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('提交成功!')
-                    } else {
-                        this.$Message.error('表单验证失败!')
-                    }
+                    login(this.formCustom).then((res) => {
+                        if (res.code === CODE_OK) {
+                            let url = getOriginUrl()
+                            if (url) {
+                                this.$router.push(url)
+                            } else {
+                                this.$router.push({name: 'bases'})
+                            }
+                        }
+                    })
                 })
             },
             handleReset (name) {

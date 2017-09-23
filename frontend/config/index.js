@@ -34,6 +34,18 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/Secure/authenticate': {
+        target: 'http://127.0.0.1:9000/',
+        changeOrigin: true,
+      },
+      '/Secure/logout': {
+        target: 'http://127.0.0.1:9000/',
+        changeOrigin: true,
+      },
+      '/Secure/login': {
+        target: 'http://127.0.0.1:9000/',
+        changeOrigin: true,
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
