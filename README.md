@@ -20,7 +20,8 @@
 > 3. 复制出错时, 从库节点颜色变为红色, 复制的数据流动箭头消失
 > 4. 点击一个数据库实例, 弹出该数据库实例关于复制的详细信息
 
-## 后端设计思路
+## 后端设计
+后端基于[play-1.4.1(https://playframework.com/documentation/1.4.x/home)](https://playframework.com/documentation/1.4.x/home)编写, 前端程序已打包到public目录, 可直接运行server端程序
 > 1. 在配置文件中定义访问的用户名和密码, 默认是admin/admin
 > 2. 在配置文件中配置MySQL的所有实例, 可灵活配置每个数据库实例
 > 3. 定时(5s)轮询获取所有MySQL实例的相关状态数据, 并放在缓存中, 数据最长存储时间1分钟
