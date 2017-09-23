@@ -38,7 +38,6 @@
         },
         computed: {
             nodes() {
-                console.log(this._getNodes(this.nodeData))
                 return this._getNodes(this.nodeData)
             },
             links() {
@@ -210,6 +209,7 @@
                 if (!links || !links.length) {
                     return []
                 }
+                let nodeStateInfos = this.nodeData.nodes
                 let nodeObjTmps = {}
                 let nodeObjs = this.nodeObjs
                 nodeObjs.forEach((nodeObj) => {
@@ -217,14 +217,17 @@
                 })
                 let arrows = []
                 links.forEach((link, index) => {
-                    arrows.push([
-                        {
-                            coord: nodeObjTmps[link.source]
-                        },
-                        {
-                            coord: nodeObjTmps[link.target]
-                        }
-                    ])
+                    // 如果目标节点没有错误, 则生成箭头
+                    if (!nodeStateInfos[link.target]) {
+                        arrows.push([
+                            {
+                                coord: nodeObjTmps[link.source]
+                            },
+                            {
+                                coord: nodeObjTmps[link.target]
+                            }
+                        ])
+                    }
                 })
                 return arrows
             }
