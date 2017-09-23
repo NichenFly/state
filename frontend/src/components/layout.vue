@@ -4,7 +4,9 @@
             <i-col span="4" class="layout-menu-left">
                 <Menu theme="dark" :active-name="activeMenu" width="auto" :open-names="openMenuNames" @on-select="menuSelected" ref="menu">
                     <div class="layout-logo-left">
-                        超级监控系统
+                        <!--  -->
+                        <img src="static/img/logo.gif" class="logo">
+                        <span>超级监控系统</span>
                     </div>
                     <Submenu :name="menu.menuName" v-for="menu in menus" :key="menu.menuName">
                         <template slot="title">
@@ -130,6 +132,13 @@
     }
 </script>
 <style lang="scss" type="stylesheet/scss">
+    .logo {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        position: absolute;
+        left: 12px;
+    }
     .layout {
         border: 1px solid #d7dde4;
         background: #f5f7f9;
@@ -166,8 +175,10 @@
     .layout-logo-left {
         width: 90%;
         height: 30px;
+        font-size: 18px;
+        font-weight: 600;
         color: #fff;
-        background: #5b6270;
+        background: #495060;
         border-radius: 3px;
         margin: 15px auto;
         display: flex;
