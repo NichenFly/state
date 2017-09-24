@@ -19,62 +19,18 @@ import models.Result;
  * @author nichen
  *
  */
-public class Remind {
+public class NotifyUtil {
 
-	static long lastSentMessageTime = System.currentTimeMillis();
-	static long lastSentMailTime = System.currentTimeMillis();
-	static String sendPeriod = Play.configuration.getProperty("remind.sendPeriod", "1h");
-
-	/**
-	 * 发送短信信息
-	 */
-	public static void sendMessage(String telephones, String hosts) {
-		if (!couldSend(lastSentMessageTime)) {
-			return;
-		}
-		String phoneList = Play.configuration.getProperty("sms.phone.numbers");
-		String appKey = Play.configuration.getProperty("sms.app.key");
-		String appSecret = Play.configuration.getProperty("sms.app.secret");
-		String signName = Play.configuration.getProperty("sms.signname");
-		String templateCode = Play.configuration.getProperty("sms.templateCode");
-		TaobaoClient client = new DefaultTaobaoClient("http://gw.api.taobao.com/router/rest", appKey, appSecret);
-		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
-		req.setExtend("123456");
-		req.setSmsType("normal");
-		req.setSmsFreeSignName(signName);
-		req.setSmsParamString("监控的机器: " + hosts + "出现异常, 请及时处理");
-		req.setRecNum(phoneList);
-		req.setSmsTemplateCode(templateCode);
-		AlibabaAliqinFcSmsNumSendResponse rsp;
-		try {
-			rsp = client.execute(req);
-			String ress = rsp.getBody();
-			Logger.info(ress);
-			if (ress.contains("true")) {
-				lastSentMessageTime = System.currentTimeMillis();
-				Logger.info("短信发送到 %s 成功", telephones);
-			} else {
-				Logger.error("短信发送到 %s 失败, 失败相关信息: %s", telephones, ress);
-			}
-		} catch (ApiException e) {
-			Logger.error("短信发送到 %s 失败", telephones);
-			e.printStackTrace();
-		}
-
-	}
+	public static long lastSentMessageTime = 0L;
+	public static long lastSentMailTime = System.currentTimeMillis();
+	public static String sendPeriod = Play.configuration.getProperty("notify.sendPeriod", "1h");
 
 	/**
-	 * 发送邮件
+	 * 检查是否可以发送提醒
+	 * @param lastSent
+	 * @return
 	 */
-	public static void sendEmail() {
-		if (!couldSend(lastSentMailTime)) {
-			return;
-		}
-
-		// lastSentMailTime = System.currentTimeMillis();
-	}
-
-	private static boolean couldSend(long lastSent) {
+	public static boolean couldSend(long lastSent) {
 		long period = 0;
 		if (sendPeriod.contains("mn") && sendPeriod.length() > 2) {
 			if (!checkPeriod(sendPeriod, "mn")) {
@@ -87,7 +43,7 @@ public class Remind {
 				return true;
 			}
 			return false;
-		} else if (sendPeriod.contains("h") && sendPeriod.length() > 2) {
+		} else if (sendPeriod.contains("h") && sendPeriod.length() >= 2) {
 			if (!checkPeriod(sendPeriod, "h")) {
 				Logger.error("提醒发送信息的周期配置不正确, 正确的配置如 30, 1h, 1d等");
 				return false;
@@ -97,7 +53,7 @@ public class Remind {
 			if (currentTime - lastSent >= period * 60 * 60 * 1000) {
 				return true;
 			}
-		} else if (sendPeriod.contains("d") && sendPeriod.length() > 2) {
+		} else if (sendPeriod.contains("d") && sendPeriod.length() >= 2) {
 			if (!checkPeriod(sendPeriod, "d")) {
 				Logger.error("提醒发送信息的周期配置不正确, 正确的配置如 30m, 1h, 1d等");
 				return false;
@@ -121,11 +77,11 @@ public class Remind {
 	 * @param pattern
 	 * @return
 	 */
-	private static boolean checkPeriod(String period, String pattern) {
+	public static boolean checkPeriod(String period, String pattern) {
 		if (period == null || period.trim().length() < 2) {
 			return false;
 		}
-		boolean isOk = false;
+		boolean isOk = true;
 		period = period.toLowerCase().substring(0, period.indexOf(pattern));
 		for (int i = 0, length = period.length(); i < length; i++) {
 			char c = period.charAt(i);

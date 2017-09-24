@@ -8,18 +8,24 @@ import java.util.regex.Pattern;
 
 import play.Play;
 import play.mvc.Mailer;
+import util.DateUtil;
+import util.NotifyUtil;
 
 public class MailNotifier extends Mailer{
 	
-	public static final String TYPE_BASES = "BASES";
-	public static final String TYPE_REPLICATIONS = "REPLICATIONS";
+	static final String emailFrom = Play.configuration.getProperty("mail.from", "notify@system.com");
 	
-	static final String emailFrom = Play.configuration.getProperty("mail.from", "system");
-	
-	public static void mkNotify(List<String> receivers, Map data) {
-		if (receivers.size() == 0 || data.isEmpty()) {
+	public static void mkNotify(List<String> receivers, List<Map<String, String>> data) {
+		if (!NotifyUtil.couldSend(NotifyUtil.lastSentMessageTime)) {
 			return;
 		}
+		
+		if (receivers == null || receivers.size() == 0 || data == null || data.size() == 0) {
+			return;
+		}
+		
+		NotifyUtil.lastSentMailTime = System.currentTimeMillis();
+		
 		String regex = "/^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,3}){1,3})$/";
 		
 		List<String> checkedReceivers = new ArrayList<String>();
@@ -28,23 +34,22 @@ public class MailNotifier extends Mailer{
 				checkedReceivers.add(receiver);
 			}
 		}
-		// 主题
-		String subject = "";
 		
-		// 内容
-		Map<String, Object> content = new HashMap<String, Object>();
+		String subject = "监控的主机出现问题";
 		
-		// 类型的提醒
-//		if (TYPE_BASES.equals(type)) {
-//			
-//		} else if (TYPE_REPLICATIONS.equals(type)) {
-//			
-//		}
-		
+		// 发件人
 		setFrom(emailFrom);
-		setSubject(subject);
+		
+		// 收件人
+		System.out.println(checkedReceivers.toArray());
 		addRecipient(checkedReceivers.toArray());
 		
-		send(content);
+		// 主题
+		setSubject(subject);
+		
+		String time = DateUtil.date2String(null, null);
+		
+		// 使用 app/views/MailNotify/mkNotify 模板
+		send(time, data);
 	}
 }

@@ -40,9 +40,10 @@ public class MySqlDBUtil {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://" + host + ":" + port + "/sys";
+			DriverManager.setLoginTimeout(10); // 10s连接不上即认为连接失败
 			con = DriverManager.getConnection(url, user, passwd);
 		} catch (Exception e) {
-			Logger.error("无法连接连接服务器: %s", host);
+			Logger.error("无法连接服务器: %s", host);
 //			e.printStackTrace();
 		}
 		return con;

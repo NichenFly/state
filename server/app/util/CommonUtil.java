@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class CommonUtil {
 		String commonUser = Play.configuration.getProperty("mysql.user");
 		String commonPasswd = Play.configuration.getProperty("mysql.passwd");
 		String commonPort = Play.configuration.getProperty("mysql.port");
+		String commonNotifyEmails = Play.configuration.getProperty("mysql.notify.emails", "");
 
 		for (int i = 1; true; i++) {
 			String ip = Play.configuration.getProperty("mysql.host" + i);
@@ -47,6 +49,7 @@ public class CommonUtil {
 			String user = Play.configuration.getProperty("mysql.host" + i + ".user", commonUser);
 			String passwd = Play.configuration.getProperty("mysql.host" + i + ".passwd", commonPasswd);
 			String port = Play.configuration.getProperty("mysql.host" + i + ".port", commonPort);
+			String emails = commonNotifyEmails.equals("") ? Play.configuration.getProperty("mysql.host" + i + ".notify.email", "") : "," + commonNotifyEmails;
 
 			if (user == null || passwd == null || port == null) {
 				Logger.error("%s 配置信息不正确,当前配置: port:%s, user:%s, passwd:%s", ip, port, user, passwd);
@@ -57,6 +60,7 @@ public class CommonUtil {
 			hostInfo.put("port", port);
 			hostInfo.put("user", user);
 			hostInfo.put("passwd", passwd);
+			hostInfo.put("email", emails);
 			hostsMap.put(ip, hostInfo);
 		}
 		return hostsMap;
