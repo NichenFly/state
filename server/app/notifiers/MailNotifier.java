@@ -1,11 +1,15 @@
 package notifiers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import play.Logger;
 import play.Play;
 import play.mvc.Mailer;
 import util.DateUtil;
@@ -14,25 +18,27 @@ import util.NotifyUtil;
 public class MailNotifier extends Mailer{
 	
 	static final String emailFrom = Play.configuration.getProperty("mail.from", "notify@system.com");
+	static final String applicationConf = "conf/application.conf";
 	
-	public static void mkNotify(List<String> receivers, List<Map<String, String>> data) {
-		if (!NotifyUtil.couldSend(NotifyUtil.lastSentMessageTime)) {
+	public static void mkNotify(String receiver, List<Map<String, String>> data) {
+		if (!NotifyUtil.couldSend()) {
 			return;
 		}
 		
-		if (receivers == null || receivers.size() == 0 || data == null || data.size() == 0) {
+		if (receiver == null || receiver.trim().equals("") || data == null || data.size() == 0) {
 			return;
 		}
 		
-		NotifyUtil.lastSentMailTime = System.currentTimeMillis();
+		try {
+			Play.configuration.load(new FileInputStream(new File(applicationConf)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		String regex = "/^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,3}){1,3})$/";
+		String regex = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
 		
-		List<String> checkedReceivers = new ArrayList<String>();
-		for (String receiver : receivers) {
-			if (Pattern.matches(regex, receiver)) {
-				checkedReceivers.add(receiver);
-			}
+		if (!Pattern.matches(regex, receiver)) {
+			return;
 		}
 		
 		String subject = "监控的主机出现问题";
@@ -41,8 +47,7 @@ public class MailNotifier extends Mailer{
 		setFrom(emailFrom);
 		
 		// 收件人
-		System.out.println(checkedReceivers.toArray());
-		addRecipient(checkedReceivers.toArray());
+		addRecipient(receiver);
 		
 		// 主题
 		setSubject(subject);
@@ -50,6 +55,14 @@ public class MailNotifier extends Mailer{
 		String time = DateUtil.date2String(null, null);
 		
 		// 使用 app/views/MailNotify/mkNotify 模板
-		send(time, data);
+		try {
+			if (send(time, data).get()) {
+				Logger.info("send email to %s success ", receiver);
+			} else {
+				Logger.error("send email to %s faild", receiver);
+			}
+		}catch (Exception e) {
+			Logger.error(e, "send email to %s error", receiver);
+		}
 	}
 }

@@ -3,24 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Mail Remind</title>
+	<style type="text/css">
+		table,table tr th, table tr td { border:1px solid #0094ff; }
+        table { min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse;}
+        .host {width: 120px;}
+        .type {width: 120px;}
+        .problem {width: 240px;}
+	</style>
 </head>
 <body>
 	<h2>监控的主机出现问题, 监控到的出错时间: ${time}</h2>
 	<table>
 		<thead>
-			<td>
-				<th>主机</th>
-				<th>问题类型</th>
-				<th>问题现状</th>
-			</td>
+			<th class="host">主机</th>
+			<th class="type">问题类型</th>
+			<th class="problem">问题现状</th>
 		</thead>
 		<tbody>
 			%{
 			    for(item in data) {
 			}%
 			    <tr>
-					<td>{item.host}</td>
-					<td>{item.type}</td>
+					<td>${item.host}</td>
+					<td>${item.type}</td>
 					<td>${item.problem}</td>
 				</tr>
 			%{

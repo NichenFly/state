@@ -49,7 +49,8 @@ public class CommonUtil {
 			String user = Play.configuration.getProperty("mysql.host" + i + ".user", commonUser);
 			String passwd = Play.configuration.getProperty("mysql.host" + i + ".passwd", commonPasswd);
 			String port = Play.configuration.getProperty("mysql.host" + i + ".port", commonPort);
-			String emails = commonNotifyEmails.equals("") ? Play.configuration.getProperty("mysql.host" + i + ".notify.email", "") : "," + commonNotifyEmails;
+			String hostEmails = Play.configuration.getProperty("mysql.host" + i + ".notify.email", "");
+			String emails = hostEmails.equals("") ? commonNotifyEmails : commonNotifyEmails.equals("") ? hostEmails : commonNotifyEmails + "," + hostEmails;
 
 			if (user == null || passwd == null || port == null) {
 				Logger.error("%s 配置信息不正确,当前配置: port:%s, user:%s, passwd:%s", ip, port, user, passwd);

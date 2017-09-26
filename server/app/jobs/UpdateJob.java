@@ -22,9 +22,10 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.CommonUtil;
 import util.MySqlDBUtil;
+import util.NotifyUtil;
 
 @OnApplicationStart
-@Every("10s")
+@Every("20s")
 public class UpdateJob extends Job {
 
 	public static final String BASES_KEY = "bases";
@@ -74,8 +75,30 @@ public class UpdateJob extends Job {
 			}
 		}
 		
+		Map<String, List<Map<String, String>>> receiverInfoMap = new HashMap<String, List<Map<String, String>>>();
 		// 没想好怎么发送邮件, 好像比我预想中的要复杂
-		List<Map<String, String>> prepareNotifyData = checkErrors(hosts);
+		List<Map<String, String>> errorHostMapList = checkErrors(hosts);
+		for (Map<String, String> errorHostMap : errorHostMapList) {
+			String host = errorHostMap.get("host");
+			String emailReceivers = hostsMap.get(host).get("email");
+			if (!emailReceivers.equals("")) {
+				String[] receivers = emailReceivers.split(",");
+				for (String receiver : receivers) {
+					if (receiverInfoMap.containsKey(receiver)) {
+						receiverInfoMap.get(receiver).add(errorHostMap);
+					} else {
+						List<Map<String, String>> preparedErrorHostMapList = new ArrayList<Map<String, String>>();
+						preparedErrorHostMapList.add(errorHostMap);
+						receiverInfoMap.put(receiver, preparedErrorHostMapList);
+					}
+				}
+			}
+		}
+		Set<String> receiverSet = receiverInfoMap.keySet();
+		for (String receiver : receiverSet) {
+			MailNotifier.mkNotify(receiver, receiverInfoMap.get(receiver));
+		}
+		NotifyUtil.lastSentTime = System.currentTimeMillis();
 
 		Logger.info("Update Job End ....");
 	}
@@ -138,12 +161,12 @@ public class UpdateJob extends Job {
 			}
 			
 			Map<String, Object> replicationMap = (Map<String, Object>) Cache.get(REPLICATION_KEY + "_" + host);
-			if (baseMap != null && baseMap.containsKey("hasError")) {
-				if ((boolean) baseMap.get("hasError")) {
+			if (replicationMap != null && replicationMap.containsKey("hasError")) {
+				if ((boolean) replicationMap.get("hasError")) {
 					Map<String, String> replicationInfo = new HashMap<String, String>();
 					replicationInfo.put("host", host);
-					replicationInfo.put("type", BASE_TYPE);
-					replicationInfo.put("problem", "无法连接到服务器");
+					replicationInfo.put("type", REPLICATION_TYPE);
+					replicationInfo.put("problem", "复制出现错误");
 					data.add(replicationInfo);
 				}
 			}

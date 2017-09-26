@@ -17,7 +17,7 @@ import util.NotifyUtil;
 public class MessageNotifier {
 
 	public static void sendMessage(String telephones, String hosts) {
-		if (!NotifyUtil.couldSend(NotifyUtil.lastSentMessageTime)) {
+		if (!NotifyUtil.couldSend()) {
 			return;
 		}
 		String phoneList = Play.configuration.getProperty("sms.phone.numbers");
@@ -39,7 +39,7 @@ public class MessageNotifier {
 			String ress = rsp.getBody();
 			Logger.info(ress);
 			if (ress.contains("true")) {
-				NotifyUtil.lastSentMessageTime = System.currentTimeMillis();
+				NotifyUtil.lastSentTime = System.currentTimeMillis();
 				Logger.info("短信发送到 %s 成功", telephones);
 			} else {
 				Logger.error("短信发送到 %s 失败, 失败相关信息: %s", telephones, ress);
