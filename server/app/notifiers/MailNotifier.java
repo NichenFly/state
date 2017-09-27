@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import jobs.UpdateJob;
 import play.Logger;
 import play.Play;
 import play.mvc.Mailer;
@@ -21,10 +22,6 @@ public class MailNotifier extends Mailer{
 	static final String applicationConf = "conf/application.conf";
 	
 	public static void mkNotify(String receiver, List<Map<String, String>> data) {
-		if (!NotifyUtil.couldSend()) {
-			return;
-		}
-		
 		if (receiver == null || receiver.trim().equals("") || data == null || data.size() == 0) {
 			return;
 		}
@@ -59,9 +56,11 @@ public class MailNotifier extends Mailer{
 			if (send(time, data).get()) {
 				Logger.info("send email to %s success ", receiver);
 			} else {
+				UpdateJob.justErrorReceiversSet.add(receiver);
 				Logger.error("send email to %s faild", receiver);
 			}
 		}catch (Exception e) {
+			UpdateJob.justErrorReceiversSet.add(receiver);
 			Logger.error(e, "send email to %s error", receiver);
 		}
 	}

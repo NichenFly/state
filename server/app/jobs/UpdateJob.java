@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,11 +34,17 @@ public class UpdateJob extends Job {
 	public static final String PROBELMS = "problems";
 	public static final String BASE_TYPE = "存活状态";
 	public static final String REPLICATION_TYPE = "复制状态";
+	public static final int RETRY_TIMES = 3;
+	
+	public static Set<String> justErrorReceiversSet = null;
 
 	@Override
 	public void doJob() {
 
 		Logger.info("Update Job Start ....");
+		
+		// 初始化为空
+		justErrorReceiversSet = new HashSet<String>();
 
 		Map<String, Map<String, String>> hostsMap = CommonUtil.getDBs();
 		Set<String> hosts = hostsMap.keySet();
@@ -75,9 +82,21 @@ public class UpdateJob extends Job {
 			}
 		}
 		
-		Map<String, List<Map<String, String>>> receiverInfoMap = new HashMap<String, List<Map<String, String>>>();
-		// 没想好怎么发送邮件, 好像比我预想中的要复杂
+		Logger.info("Update Job End ....");
+		
+		// 邮件提醒
 		List<Map<String, String>> errorHostMapList = checkErrors(hosts);
+		if (errorHostMapList.size() == 0) {
+			return;
+		}
+		
+		if (!NotifyUtil.couldSend()) {
+			return;
+		}
+		
+		Logger.info("出现错误, 准备发送邮件提醒...");
+		
+		Map<String, List<Map<String, String>>> receiverInfoMap = new HashMap<String, List<Map<String, String>>>();
 		for (Map<String, String> errorHostMap : errorHostMapList) {
 			String host = errorHostMap.get("host");
 			String emailReceivers = hostsMap.get(host).get("email");
@@ -99,8 +118,29 @@ public class UpdateJob extends Job {
 			MailNotifier.mkNotify(receiver, receiverInfoMap.get(receiver));
 		}
 		NotifyUtil.lastSentTime = System.currentTimeMillis();
-
-		Logger.info("Update Job End ....");
+		
+		// 出错的重试TRY_TIMES(3)次
+		if (!justErrorReceiversSet.isEmpty()) {
+			for (int i = 0; i < RETRY_TIMES; i++) {
+				Logger.info("正在进行第 %s 次重试...", i + 1);
+				for (String receiver : justErrorReceiversSet) {
+					justErrorReceiversSet.remove(receiver);
+					MailNotifier.mkNotify(receiver, receiverInfoMap.get(receiver));
+				}
+				if (justErrorReceiversSet.isEmpty()) {
+					break;
+				}
+			}
+		}
+		
+		// 重试3次仍出错的, 加入到计划队列中, 过段时间后再次重试
+		if (!justErrorReceiversSet.isEmpty()) {
+			Logger.info("%s 次重试仍有失败, 加入到重试计划中, 稍后进行再次重试", RETRY_TIMES);
+			for (String receiver : justErrorReceiversSet) {
+				ErrorRetryJob.errorReceiversMap.put(receiver, receiverInfoMap.get(receiver));
+				justErrorReceiversSet.remove(receiver);
+			}
+		}
 	}
 	
 	/**
