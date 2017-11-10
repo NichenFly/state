@@ -22,7 +22,8 @@ import models.Result;
 public class NotifyUtil {
 
 	public static long lastSentTime = 0L;
-	static final String SNED_EMAIL_SWITCH = Play.configuration.getProperty("notify.send", "off");
+	static final String SEND_STATE_OFF = "off";
+	static final String SNED_EMAIL_SWITCH = Play.configuration.getProperty("notify.send", SEND_STATE_OFF);
 	public static String sendPeriod = Play.configuration.getProperty("notify.sendPeriod", "1h");
 	static final String MN = "mn";
 	static final String HOUR = "h";
@@ -39,7 +40,7 @@ public class NotifyUtil {
 	 * @return
 	 */
 	public static boolean couldSend() {
-		if ("off".equals(SNED_EMAIL_SWITCH)) {
+		if (SEND_STATE_OFF.equals(SNED_EMAIL_SWITCH)) {
 			Logger.warn("没有开启出错通知, 开启方法: 在conf/application.conf添加或修改notify.send=on");
 			return false;
 		}
