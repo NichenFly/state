@@ -26,7 +26,7 @@ import play.cache.Cache;
 import play.db.jpa.JPA;
 import play.mvc.*;
 import util.CommonUtil;
-import util.MySqlDBUtil;
+import util.MySqlUtil;
 
 /**
  * MySQL相关信息获取
@@ -34,7 +34,7 @@ import util.MySqlDBUtil;
  * date: 2017-09-18
  */
 @With(Secure.Security.class)
-public class MySQLController extends Controller {
+public class MysqlController extends Controller {
     
 	/**
 	 * 获取基本信息的接口
@@ -82,20 +82,20 @@ public class MySQLController extends Controller {
     	List<Map<String, String>> infoList = new ArrayList<Map<String, String>>();
     	List<Map<String, String>> columnList = new ArrayList<Map<String, String>>();
     	
-    	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
+    	Connection con = MySqlUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
     	
     	if (con == null) {
-    		Map<String, String> info = new HashMap<String, String>();
+    		Map<String, String> info = new HashMap<String, String>(16);
     		info.put("category", "State");
     		info.put("status", "无法连接到数据库");
     		info.put("desc", "在连接到数据库时出现问题, 请检查数据库主机, 用户名, 密码, 端口号是否配置正确,目标机器是否授予本监控程序远程访问权限");
     		infoList.add(info);
     	} else {
-    		Map<String, String> infoMap = MySqlDBUtil.getBases(con);
+    		Map<String, String> infoMap = MySqlUtil.getBases(con);
         	Map<String, String> descMap = (Map<String, String>) Cache.get(ApplicationStartJob.MYSQL_DESC_KEY);
         	Set<String> keySet = infoMap.keySet();
         	for (String key : keySet) {
-        		Map<String, String> info = new HashMap<String, String>();
+        		Map<String, String> info = new HashMap<String, String>(16);
         		info.put("category", key);
         		info.put("status", infoMap.get(key));
         		info.put("desc",descMap.get(key));
@@ -103,17 +103,17 @@ public class MySQLController extends Controller {
         	}
     	}
     	
-    	Map<String, String> column = new HashMap<String, String>();
+    	Map<String, String> column = new HashMap<String, String>(16);
     	column.put("title", "变量");
     	column.put("key", "category");
     	columnList.add(column);
     	
-    	column = new HashMap<String, String>();
+    	column = new HashMap<String, String>(16);
     	column.put("title", "值");
     	column.put("key", "status");
     	columnList.add(column);
     	
-    	Map<String, List<Map<String, String>>> data = new HashMap<String, List<Map<String, String>>>();
+    	Map<String, List<Map<String, String>>> data = new HashMap<String, List<Map<String, String>>>(16);
     	data.put("data", infoList);
     	data.put("columns", columnList);
     	
@@ -166,18 +166,18 @@ public class MySQLController extends Controller {
     		renderJSON(result);
     	} 
     	List<Map<String, Object>> infoMap = new ArrayList<Map<String, Object>>();
-    	Connection con = MySqlDBUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
+    	Connection con = MySqlUtil.getMysqlConnection(host, hostMap.get("port"), hostMap.get("user"), hostMap.get("passwd"));
     	if (con == null) {
     		List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
-    		Map<String, Object> info = new HashMap<String, Object>();
+    		Map<String, Object> info = new HashMap<String, Object>(16);
     		info.put("host", "Self");
     		info.put("hasError", true);
     		info.put("state", "无法连接到数据库");
     		infoList.add(info);
     		infoMap.addAll(infoList);
     	} else {
-    		List<Map<String, Object>> masterInfoMap = MySqlDBUtil.getReplications(con, "master");
-        	List<Map<String, Object>> slaveInfoMap = MySqlDBUtil.getReplications(con, "slave");
+    		List<Map<String, Object>> masterInfoMap = MySqlUtil.getReplications(con, "master");
+        	List<Map<String, Object>> slaveInfoMap = MySqlUtil.getReplications(con, "slave");
         	
         	infoMap.addAll(masterInfoMap);
         	infoMap.addAll(slaveInfoMap);

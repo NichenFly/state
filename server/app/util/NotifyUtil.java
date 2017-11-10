@@ -23,6 +23,14 @@ public class NotifyUtil {
 
 	public static long lastSentTime = 0L;
 	public static String sendPeriod = Play.configuration.getProperty("notify.sendPeriod", "1h");
+	static final String MN = "mn";
+	static final String HOUR = "h";
+	static final String DAY = "d";
+	static final int SEND_PERIOD = 2;
+	static final int MILLS_OF_SECONDS = 1000;
+	static final int SECONDS_OF_MN = 60;
+	static final int MNS_OF_HOUR = 60;
+	static final int HOURS_OF_DAY = 24;
 
 	/**
 	 * 检查是否可以发送提醒
@@ -31,35 +39,35 @@ public class NotifyUtil {
 	 */
 	public static boolean couldSend() {
 		long period = 0;
-		if (sendPeriod.contains("mn") && sendPeriod.length() > 2) {
-			if (!checkPeriod(sendPeriod, "mn")) {
+		if (sendPeriod.contains(MN) && sendPeriod.length() > SEND_PERIOD) {
+			if (!checkPeriod(sendPeriod, MN)) {
 				Logger.error("提醒发送信息的周期配置不正确, 正确的配置如 30mn, 1h, 1d等");
 				return false;
 			}
-			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("mn")));
+			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf(MN)));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSentTime >= period * 60 * 1000) {
+			if (currentTime - lastSentTime >= period * SECONDS_OF_MN * MILLS_OF_SECONDS) {
 				return true;
 			}
 			return false;
-		} else if (sendPeriod.contains("h") && sendPeriod.length() >= 2) {
-			if (!checkPeriod(sendPeriod, "h")) {
+		} else if (sendPeriod.contains(HOUR) && sendPeriod.length() >= SEND_PERIOD) {
+			if (!checkPeriod(sendPeriod, HOUR)) {
 				Logger.error("提醒发送信息的周期配置不正确, 正确的配置如 30, 1h, 1d等");
 				return false;
 			}
-			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("h")));
+			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf(HOUR)));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSentTime >= period * 60 * 60 * 1000) {
+			if (currentTime - lastSentTime >= period * MNS_OF_HOUR * SECONDS_OF_MN * MILLS_OF_SECONDS) {
 				return true;
 			}
-		} else if (sendPeriod.contains("d") && sendPeriod.length() >= 2) {
-			if (!checkPeriod(sendPeriod, "d")) {
+		} else if (sendPeriod.contains(DAY) && sendPeriod.length() >= SEND_PERIOD) {
+			if (!checkPeriod(sendPeriod, DAY)) {
 				Logger.error("提醒发送信息的周期配置不正确, 正确的配置如 30m, 1h, 1d等");
 				return false;
 			}
-			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf("d")));
+			period = Long.parseLong(sendPeriod.substring(0, sendPeriod.indexOf(DAY)));
 			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSentTime >= period * 24 * 60 * 60 * 1000) {
+			if (currentTime - lastSentTime >= period * HOURS_OF_DAY * MNS_OF_HOUR * SECONDS_OF_MN * MILLS_OF_SECONDS) {
 				return true;
 			}
 		} else {
@@ -77,7 +85,7 @@ public class NotifyUtil {
 	 * @return
 	 */
 	public static boolean checkPeriod(String period, String pattern) {
-		if (period == null || period.trim().length() < 2) {
+		if (period == null || period.trim().length() < SEND_PERIOD) {
 			return false;
 		}
 		boolean isOk = true;

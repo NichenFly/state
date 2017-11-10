@@ -16,10 +16,15 @@ import play.mvc.Mailer;
 import util.DateUtil;
 import util.NotifyUtil;
 
+/**
+ * 邮件提醒
+ * @author nichen
+ *
+ */
 public class MailNotifier extends Mailer{
 	
-	static final String emailFrom = Play.configuration.getProperty("mail.from", "notify@system.com");
-	static final String applicationConf = "conf/application.conf";
+	static final String EMAIL_FROM = Play.configuration.getProperty("mail.from", "notify@system.com");
+	static final String APPLICATION_CONF = "conf/application.conf";
 	
 	public static void mkNotify(String receiver, List<Map<String, String>> data) {
 		if (receiver == null || receiver.trim().equals("") || data == null || data.size() == 0) {
@@ -27,7 +32,7 @@ public class MailNotifier extends Mailer{
 		}
 		
 		try {
-			Play.configuration.load(new FileInputStream(new File(applicationConf)));
+			Play.configuration.load(new FileInputStream(new File(APPLICATION_CONF)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +46,7 @@ public class MailNotifier extends Mailer{
 		String subject = "监控的主机出现问题";
 		
 		// 发件人
-		setFrom(emailFrom);
+		setFrom(EMAIL_FROM);
 		
 		// 收件人
 		addRecipient(receiver);

@@ -17,20 +17,20 @@ import play.Play;
  * @author nichen date: 2017-08-27
  */
 public class CommonUtil {
-	public static final String resourcesPath = Play.applicationPath + "/conf/resources/";
-	static final String mysqlConf = resourcesPath + "mysql.conf";
-	static final String redisConf = resourcesPath + "redis.conf";
+	public static final String RESOURCE_PATH = Play.applicationPath + "/conf/resources/";
+	static final String MYSQL_CONF = RESOURCE_PATH + "mysql.conf";
+	static final String REDIS_CONF = RESOURCE_PATH + "redis.conf";
 
 	/**
 	 * 获取数据库连接信息
 	 */
 	public static Map<String, Map<String, String>> getDBs() {
 
-		Map<String, Map<String, String>> hostsMap = new HashMap<String, Map<String, String>>();
+		Map<String, Map<String, String>> hostsMap = new HashMap<String, Map<String, String>>(16);
 
 		Play.configuration.clear();
 		try {
-			Play.configuration.load(new FileInputStream(new File(mysqlConf)));
+			Play.configuration.load(new FileInputStream(new File(MYSQL_CONF)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,12 +45,12 @@ public class CommonUtil {
 			if (ip == null) {
 				break;
 			}
-			Map<String, String> hostInfo = new HashMap<String, String>();
+			Map<String, String> hostInfo = new HashMap<String, String>(16);
 			String user = Play.configuration.getProperty("mysql.host" + i + ".user", commonUser);
 			String passwd = Play.configuration.getProperty("mysql.host" + i + ".passwd", commonPasswd);
 			String port = Play.configuration.getProperty("mysql.host" + i + ".port", commonPort);
 			String hostEmails = Play.configuration.getProperty("mysql.host" + i + ".notify.email", "");
-			String emails = hostEmails.equals("") ? commonNotifyEmails : commonNotifyEmails.equals("") ? hostEmails : commonNotifyEmails + "," + hostEmails;
+			String emails = "".equals(hostEmails) ? commonNotifyEmails : "".equals(commonNotifyEmails) ? hostEmails : commonNotifyEmails + "," + hostEmails;
 
 			if (user == null || passwd == null || port == null) {
 				Logger.error("%s 配置信息不正确,当前配置: port:%s, user:%s, passwd:%s", ip, port, user, passwd);
@@ -72,7 +72,7 @@ public class CommonUtil {
 
 		Play.configuration.clear();
 		try {
-			Play.configuration.load(new FileInputStream(new File(redisConf)));
+			Play.configuration.load(new FileInputStream(new File(REDIS_CONF)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +85,7 @@ public class CommonUtil {
 			if (ip == null) {
 				break;
 			}
-			Map<String, String> hostInfo = new HashMap<String, String>();
+			Map<String, String> hostInfo = new HashMap<String, String>(16);
 			String passwd = Play.configuration.getProperty("redis.host" + i + ".passwd", commonPasswd);
 			String port = Play.configuration.getProperty("redis.host" + i + ".port", commonPort);
 

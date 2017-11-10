@@ -12,6 +12,11 @@ import play.cache.Cache;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 
+/**
+ * 应用程序正式启动前需要处理的任务
+ * @author nichen
+ * 
+ */
 @OnApplicationStart
 public class ApplicationStartJob extends Job{
 	public static final String MYSQL_DESC_KEY = "mysql_desc";
@@ -22,7 +27,7 @@ public class ApplicationStartJob extends Job{
 			@SuppressWarnings("resource")
 			Scanner scanner = new Scanner(
 					new InputStreamReader(new FileInputStream("conf/resources/mysql-bases-desc"), "UTF-8"));
-			Map<String, String> descMap = new HashMap<String, String>();
+			Map<String, String> descMap = new HashMap<String, String>(16);
 			while (scanner.hasNext()) {
 				String line = scanner.nextLine();
 				int index = line.indexOf(":");

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,9 +23,14 @@ import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.CommonUtil;
-import util.MySqlDBUtil;
+import util.MySqlUtil;
 import util.NotifyUtil;
 
+/**
+ * 更新数据的任务
+ * @author nichen
+ *
+ */
 @OnApplicationStart
 @Every("20s")
 public class UpdateJob extends Job {
@@ -56,15 +62,15 @@ public class UpdateJob extends Job {
 				String port = hostMap.get("port");
 				String user = hostMap.get("user");
 				String passwd = hostMap.get("passwd");
-				con = MySqlDBUtil.getMysqlConnection(mysqlHost, port, user, passwd);
+				con = MySqlUtil.getMysqlConnection(mysqlHost, port, user, passwd);
 				
 				Map<String, String> basesMap = null;
 				if (con != null) {
 					Logger.info("Get %s's Bases info ...", mysqlHost);
-					basesMap = MySqlDBUtil.getBases(con);
+					basesMap = MySqlUtil.getBases(con);
 
 					Logger.info("Get %s's Replications info ...", mysqlHost);
-					List<Map<String, Object>> replicationMap = MySqlDBUtil.getReplications(con, "slave");
+					List<Map<String, Object>> replicationMap = MySqlUtil.getReplications(con, "slave");
 					Cache.set(REPLICATION_KEY + "_" + mysqlHost, resolveReplicationsData(mysqlHost, replicationMap));
 				}
 				
@@ -96,11 +102,11 @@ public class UpdateJob extends Job {
 		
 		Logger.info("出现错误, 准备发送邮件提醒...");
 		
-		Map<String, List<Map<String, String>>> receiverInfoMap = new HashMap<String, List<Map<String, String>>>();
+		Map<String, List<Map<String, String>>> receiverInfoMap = new HashMap<String, List<Map<String, String>>>(16);
 		for (Map<String, String> errorHostMap : errorHostMapList) {
 			String host = errorHostMap.get("host");
 			String emailReceivers = hostsMap.get(host).get("email");
-			if (!emailReceivers.equals("")) {
+			if (!"".equals(emailReceivers)) {
 				String[] receivers = emailReceivers.split(",");
 				for (String receiver : receivers) {
 					if (receiverInfoMap.containsKey(receiver)) {
@@ -123,8 +129,10 @@ public class UpdateJob extends Job {
 		if (!justErrorReceiversSet.isEmpty()) {
 			for (int i = 0; i < RETRY_TIMES; i++) {
 				Logger.info("正在进行第 %s 次重试...", i + 1);
-				for (String receiver : justErrorReceiversSet) {
-					justErrorReceiversSet.remove(receiver);
+				Iterator<String> it = justErrorReceiversSet.iterator();
+				while (it.hasNext()) {
+					String receiver = it.next();
+					it.remove();
 					MailNotifier.mkNotify(receiver, receiverInfoMap.get(receiver));
 				}
 				if (justErrorReceiversSet.isEmpty()) {
@@ -136,9 +144,11 @@ public class UpdateJob extends Job {
 		// 重试3次仍出错的, 加入到计划队列中, 过段时间后再次重试
 		if (!justErrorReceiversSet.isEmpty()) {
 			Logger.info("%s 次重试仍有失败, 加入到重试计划中, 稍后进行再次重试", RETRY_TIMES);
-			for (String receiver : justErrorReceiversSet) {
+			Iterator<String> it = justErrorReceiversSet.iterator();
+			while (it.hasNext()) {
+				String receiver = it.next();
 				ErrorRetryJob.errorReceiversMap.put(receiver, receiverInfoMap.get(receiver));
-				justErrorReceiversSet.remove(receiver);
+				it.remove();
 			}
 		}
 	}
@@ -149,7 +159,7 @@ public class UpdateJob extends Job {
 	 * @return
 	 */
 	private Map<String, Object> resolveBasesData(String host, Map<String, String> basesMap) {
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>(16);
 		data.put("title", host);
 		if(host == null || host.trim().equals("") || basesMap == null || basesMap.keySet().isEmpty()){
 			data.put("hasError", true);
@@ -166,7 +176,7 @@ public class UpdateJob extends Job {
 	 * @return
 	 */
 	private Map<String, Object> resolveReplicationsData(String host, List<Map<String, Object>> replicationsMap) {
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>(16);
 		if(host == null || host.trim().equals("")){
 			return data;
 		}
@@ -192,7 +202,7 @@ public class UpdateJob extends Job {
 			Map<String, Object> baseMap = (Map<String, Object>) Cache.get(BASES_KEY + "_" + host);
 			if (baseMap != null && baseMap.containsKey("hasError")) {
 				if ((boolean) baseMap.get("hasError")) {
-					Map<String, String> baseInfo = new HashMap<String, String>();
+					Map<String, String> baseInfo = new HashMap<String, String>(16);
 					baseInfo.put("host", host);
 					baseInfo.put("type", BASE_TYPE);
 					baseInfo.put("problem", "无法连接到服务器");
@@ -203,7 +213,7 @@ public class UpdateJob extends Job {
 			Map<String, Object> replicationMap = (Map<String, Object>) Cache.get(REPLICATION_KEY + "_" + host);
 			if (replicationMap != null && replicationMap.containsKey("hasError")) {
 				if ((boolean) replicationMap.get("hasError")) {
-					Map<String, String> replicationInfo = new HashMap<String, String>();
+					Map<String, String> replicationInfo = new HashMap<String, String>(16);
 					replicationInfo.put("host", host);
 					replicationInfo.put("type", REPLICATION_TYPE);
 					replicationInfo.put("problem", "复制出现错误");
@@ -212,6 +222,7 @@ public class UpdateJob extends Job {
 			}
 		}
 		Collections.sort(data,new Comparator<Map<String, String>>(){
+			@Override
             public int compare(Map<String, String> m1, Map<String, String> m2) {
                 return m1.get("type").charAt(0) - m2.get("type").charAt(0);
             }

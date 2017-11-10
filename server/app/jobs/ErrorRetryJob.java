@@ -10,6 +10,11 @@ import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 
+/**
+ * 出错重试的任务
+ * @author nichen
+ *
+ */
 @OnApplicationStart
 @Every("5mn")
 public class ErrorRetryJob extends Job{

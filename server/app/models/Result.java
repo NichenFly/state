@@ -1,5 +1,10 @@
 package models;
 
+/**
+ * 请求结果
+ * @author nichen
+ *
+ */
 public class Result {
 	
 	public static final int OK = 200;

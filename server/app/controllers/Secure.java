@@ -12,13 +12,19 @@ import play.data.validation.*;
 import play.libs.*;
 import play.utils.*;
 
+/**
+ * 安全控制
+ * @author nichen
+ * 
+ */
 public class Secure extends Controller {
-
+	static final String USERNAME = "username";
     @Before(unless={"login", "authenticate", "logout"})
     static void checkAccess() throws Throwable {
         // Authent
-        if(!session.contains("username")) {
-            flash.put("url", "GET".equals(request.method) ? request.url : Play.ctxPath + "/"); // seems a good default
+        if(!session.contains(USERNAME)) {
+        	// seems a good default
+            flash.put("url", "GET".equals(request.method) ? request.url : Play.ctxPath + "/"); 
             login();
         }
         // Checks
@@ -53,7 +59,8 @@ public class Secure extends Controller {
                 String restOfCookie = remember.value.substring(firstIndex + 1);
                 String username = remember.value.substring(firstIndex + 1, lastIndex);
                 String time = remember.value.substring(lastIndex + 1);
-                Date expirationDate = new Date(Long.parseLong(time)); // surround with try/catch?
+                // surround with try/catch?
+                Date expirationDate = new Date(Long.parseLong(time)); 
                 Date now = new Date();
                 if (expirationDate == null || expirationDate.before(now)) {
                     logout();
@@ -80,7 +87,7 @@ public class Secure extends Controller {
             // This is the official method name
             allowed = (Boolean)Security.invoke("authenticate", username, password);
         }*/
-        if(validation.hasErrors() || !allowed) {
+        if(Validation.hasErrors() || !allowed) {
             flash.keep("url");
             flash.error("secure.error");
             params.flash();

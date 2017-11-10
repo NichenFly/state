@@ -3,6 +3,11 @@ package util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 日期处理的工具类
+ * @author nichen
+ *
+ */
 public class DateUtil {
 	public static String dateFormat = "yyyy-MM-dd HH:mm:ss";
 	

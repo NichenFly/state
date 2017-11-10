@@ -8,6 +8,11 @@ import models.Result;
 import models.SubMenu;
 import play.mvc.*;
 
+/**
+ * 用于处理和获取菜单项
+ * @author nichen
+ * 
+ */
 public class MenuController extends Controller {
 
     public static void getMenus() {

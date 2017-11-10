@@ -24,7 +24,8 @@ import java.sql.SQLException;
 /**
  * @author nichen date: 2017-08-27
  */
-public class MySqlDBUtil {
+public class MySqlUtil {
+	static final int TIMEOUT = Integer.parseInt(Play.configuration.getProperty("db.timeout", "10"));
 
 	/**
 	 * 获取数据库连接
@@ -40,7 +41,8 @@ public class MySqlDBUtil {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://" + host + ":" + port + "/sys";
-			DriverManager.setLoginTimeout(10); // 10s连接不上即认为连接失败
+			// 10s连接不上即认为连接失败
+			DriverManager.setLoginTimeout(10); 
 			con = DriverManager.getConnection(url, user, passwd);
 		} catch (Exception e) {
 			Logger.error("无法连接服务器: %s", host);
@@ -56,7 +58,7 @@ public class MySqlDBUtil {
 	 * @return
 	 */
 	public static Map<String, String> getBases(Connection con) {
-		Map<String, String> infoMap = new HashMap<String, String>();
+		Map<String, String> infoMap = new HashMap<String, String>(16);
 		String sql = "show status";
 		try {
 			PreparedStatement prep = con.prepareStatement(sql);
@@ -88,7 +90,7 @@ public class MySqlDBUtil {
 			ResultSetMetaData metaData = resultSet.getMetaData();
 			int columnCount = metaData.getColumnCount();
 			while (resultSet.next()) {
-				Map<String, Object> infoMap = new HashMap<String, Object>();
+				Map<String, Object> infoMap = new HashMap<String, Object>(16);
 				for (int i = 1; i <= columnCount; i++) {
 					String columnName = metaData.getColumnName(i);
 					infoMap.put(columnName, resultSet.getString(columnName));

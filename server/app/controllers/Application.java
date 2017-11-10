@@ -16,6 +16,11 @@ import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * 应用程序的关于全局的一些接口或处理
+ * @author nichen
+ * 
+ */
 @With(Secure.class)
 public class Application extends Controller {
 	

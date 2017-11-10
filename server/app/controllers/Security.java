@@ -7,9 +7,14 @@ import java.io.IOException;
 import play.Play;
 import util.CommonUtil;
 
+/**
+ * 安全控制
+ * @author nichen
+ * 
+ */
 public class Security extends Secure.Security{
 	
-	static final String secureConf = CommonUtil.resourcesPath + "secure.conf";
+	static final String SECURE_CONF = CommonUtil.RESOURCE_PATH + "secure.conf";
 	
 	static boolean authenticate(String username, String password) {
     	if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -18,7 +23,7 @@ public class Security extends Secure.Security{
     	
     	Play.configuration.clear();
     	try {
-			Play.configuration.load(new FileInputStream(new File(secureConf)));
+			Play.configuration.load(new FileInputStream(new File(SECURE_CONF)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
