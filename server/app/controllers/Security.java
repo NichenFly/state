@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import play.Play;
+import play.utils.Properties;
 import util.CommonUtil;
 
 /**
@@ -21,20 +22,20 @@ public class Security extends Secure.Security{
     		return false;
     	}
     	
-    	Play.configuration.clear();
+    	Properties properties = new Properties();
     	try {
-			Play.configuration.load(new FileInputStream(new File(SECURE_CONF)));
+    		properties.load(new FileInputStream(new File(SECURE_CONF)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     	
     	for (int i = 1; true; i++) {
-    		String usernameStored = Play.configuration.getProperty("user" + i + ".name");
+    		String usernameStored = properties.get("user" + i + ".name");
     		if (usernameStored == null) {
     			break;
     		}
     		if (username.trim().equals(usernameStored.trim())) {
-    			String passwdStored = Play.configuration.getProperty("user" + i + ".password");
+    			String passwdStored = properties.get("user" + i + ".password");
     			if (passwdStored == null) {
     				break;
     			}

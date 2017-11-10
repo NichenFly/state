@@ -25,7 +25,7 @@ import java.sql.SQLException;
  * @author nichen date: 2017-08-27
  */
 public class MySqlUtil {
-	static final int TIMEOUT = Integer.parseInt(Play.configuration.getProperty("db.timeout", "10"));
+	static final int TIMEOUT = Integer.parseInt(Play.configuration.getProperty("mysql.connect.timeout", "10"));
 
 	/**
 	 * 获取数据库连接
@@ -42,7 +42,7 @@ public class MySqlUtil {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://" + host + ":" + port + "/sys";
 			// 10s连接不上即认为连接失败
-			DriverManager.setLoginTimeout(10); 
+			DriverManager.setLoginTimeout(TIMEOUT); 
 			con = DriverManager.getConnection(url, user, passwd);
 		} catch (Exception e) {
 			Logger.error("无法连接服务器: %s", host);

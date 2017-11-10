@@ -31,12 +31,7 @@ public class MailNotifier extends Mailer{
 			return;
 		}
 		
-		try {
-			Play.configuration.load(new FileInputStream(new File(APPLICATION_CONF)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		// email
 		String regex = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
 		
 		if (!Pattern.matches(regex, receiver)) {

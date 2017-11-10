@@ -19,8 +19,8 @@ import java.util.Set;
 import notifiers.MailNotifier;
 import play.Logger;
 import play.cache.Cache;
-import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.On;
 import play.jobs.OnApplicationStart;
 import util.CommonUtil;
 import util.MySqlUtil;
@@ -32,7 +32,7 @@ import util.NotifyUtil;
  *
  */
 @OnApplicationStart
-@Every("20s")
+@On("0/20 * * * * ?")
 public class UpdateJob extends Job {
 
 	public static final String BASES_KEY = "bases";

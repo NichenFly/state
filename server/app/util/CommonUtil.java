@@ -11,6 +11,7 @@ import java.util.Map;
 
 import play.Logger;
 import play.Play;
+import play.utils.Properties;
 
 /**
  * 
@@ -25,31 +26,31 @@ public class CommonUtil {
 	 * 获取数据库连接信息
 	 */
 	public static Map<String, Map<String, String>> getDBs() {
-
+		
 		Map<String, Map<String, String>> hostsMap = new HashMap<String, Map<String, String>>(16);
 
-		Play.configuration.clear();
+		Properties properties = new Properties();
 		try {
-			Play.configuration.load(new FileInputStream(new File(MYSQL_CONF)));
-		} catch (IOException e) {
-			e.printStackTrace();
+			properties.load(new FileInputStream(new File(MYSQL_CONF)));
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 
-		String commonUser = Play.configuration.getProperty("mysql.user");
-		String commonPasswd = Play.configuration.getProperty("mysql.passwd");
-		String commonPort = Play.configuration.getProperty("mysql.port");
-		String commonNotifyEmails = Play.configuration.getProperty("mysql.notify.emails", "");
+		String commonUser = properties.get("mysql.user");
+		String commonPasswd = properties.get("mysql.passwd");
+		String commonPort = properties.get("mysql.port");
+		String commonNotifyEmails = properties.get("mysql.notify.emails", "");
 
 		for (int i = 1; true; i++) {
-			String ip = Play.configuration.getProperty("mysql.host" + i);
+			String ip = properties.get("mysql.host" + i);
 			if (ip == null) {
 				break;
 			}
 			Map<String, String> hostInfo = new HashMap<String, String>(16);
-			String user = Play.configuration.getProperty("mysql.host" + i + ".user", commonUser);
-			String passwd = Play.configuration.getProperty("mysql.host" + i + ".passwd", commonPasswd);
-			String port = Play.configuration.getProperty("mysql.host" + i + ".port", commonPort);
-			String hostEmails = Play.configuration.getProperty("mysql.host" + i + ".notify.email", "");
+			String user = properties.get("mysql.host" + i + ".user", commonUser);
+			String passwd = properties.get("mysql.host" + i + ".passwd", commonPasswd);
+			String port = properties.get("mysql.host" + i + ".port", commonPort);
+			String hostEmails = properties.get("mysql.host" + i + ".notify.email", "");
 			String emails = "".equals(hostEmails) ? commonNotifyEmails : "".equals(commonNotifyEmails) ? hostEmails : commonNotifyEmails + "," + hostEmails;
 
 			if (user == null || passwd == null || port == null) {
@@ -70,24 +71,24 @@ public class CommonUtil {
 	public static List<Map<String, String>> getRedis() {
 		List<Map<String, String>> hostList = new ArrayList<Map<String, String>>();
 
-		Play.configuration.clear();
+		Properties properties = new Properties();
 		try {
-			Play.configuration.load(new FileInputStream(new File(REDIS_CONF)));
-		} catch (IOException e) {
-			e.printStackTrace();
+			properties.load(new FileInputStream(new File(REDIS_CONF)));
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 
-		String commonPasswd = Play.configuration.getProperty("redis.passwd");
-		String commonPort = Play.configuration.getProperty("redis.port", "6379");
+		String commonPasswd = properties.get("redis.passwd");
+		String commonPort = properties.get("redis.port", "6379");
 
 		for (int i = 1; true; i++) {
-			String ip = Play.configuration.getProperty("redis.host" + i);
+			String ip = properties.get("redis.host" + i);
 			if (ip == null) {
 				break;
 			}
 			Map<String, String> hostInfo = new HashMap<String, String>(16);
-			String passwd = Play.configuration.getProperty("redis.host" + i + ".passwd", commonPasswd);
-			String port = Play.configuration.getProperty("redis.host" + i + ".port", commonPort);
+			String passwd = properties.get("redis.host" + i + ".passwd", commonPasswd);
+			String port = properties.get("redis.host" + i + ".port", commonPort);
 
 			hostInfo.put("ip", ip);
 			hostInfo.put("port", port);
